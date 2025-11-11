@@ -1,4 +1,3 @@
-```markdown
 # Serenita: Your Intelligent Study Planner
 
 Serenita is an intelligent desktop application designed to eliminate the guesswork from preparing for competitive exams. Instead of a static, rigid schedule, Serenita uses a cognitive tutor engine to analyze your performance, understand your personal challenges, and adapt your study plan in real-time.
@@ -109,4 +108,3 @@ This project was developed with a focus on internal software quality to ensure i
     *   **Constants:** Values like margins and spacing are centralized in `app/core/constants.py`.
     *   **Icon Manager:** All icon names are mapped in `app/core/icon_manager.py`, allowing for easy updates and ensuring consistency.
     *   **Styles (QSS):** Application themes are loaded from external `.qss` files, completely separating styling from the code logic.
-```
