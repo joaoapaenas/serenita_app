@@ -112,7 +112,8 @@ def main():
         cycle_subject_service=SqliteCycleSubjectService(conn_factory),
         study_queue_service=SqliteStudyQueueService(conn_factory),
         work_unit_service=SqliteWorkUnitService(conn_factory),
-        template_subject_service=SqliteTemplateSubjectService(conn_factory)
+        template_subject_service=SqliteTemplateSubjectService(conn_factory),
+        conn_factory=conn_factory
     )
 
     user = app_context.user_service.get_first_user()

@@ -71,7 +71,7 @@ class ToolbarManager:
         is_session_active = self._main_ctl.session_manager.is_session_active()
         is_showing_session_widget = isinstance(current_widget, StudySessionWidget)
 
-        is_onboarding_active = self._main_ctl.view_controller_factory.is_onboarding_active()
+        is_onboarding_active = self._main_ctl._active_onboarding_controller is not None
         is_showing_onboarding_widget = isinstance(current_widget, OnboardingView)
 
         log.debug(

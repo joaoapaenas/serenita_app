@@ -6,6 +6,7 @@ from app.services.interfaces import (
     IAnalyticsService, IMasterSubjectService, ICycleSubjectService, IStudyQueueService,
     IWorkUnitService, ITemplateSubjectService
 )
+from app.core.database import SqliteConnectionFactory
 
 
 @dataclass
@@ -22,3 +23,4 @@ class AppContext:
     study_queue_service: IStudyQueueService
     work_unit_service: IWorkUnitService
     template_subject_service: ITemplateSubjectService
+    conn_factory: SqliteConnectionFactory
