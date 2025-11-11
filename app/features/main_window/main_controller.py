@@ -23,11 +23,12 @@ log = logging.getLogger(__name__)
 
 
 class MainWindowController(QObject):
-    def __init__(self, view, current_user: User, app_context: AppContext):
+    def __init__(self, view, current_user: User, app_context: AppContext, is_dev_mode: bool = False):
         super().__init__()
         self.view = view
         self.current_user = current_user
         self.app_context = app_context
+        self.is_dev_mode = is_dev_mode
 
         self.undo_stack = QUndoStack(self.view)
         self.threadpool = QThreadPool.globalInstance()
@@ -39,7 +40,7 @@ class MainWindowController(QObject):
         self.onboarding_page_cache: int = 0
 
         self.navigator = Navigator(self)
-        self.view_controller_factory = ViewControllerFactory(app_context, self.navigator)
+        self.view_controller_factory = ViewControllerFactory(app_context, self.navigator, self.is_dev_mode)
         self.navigator.set_factory(self.view_controller_factory)
 
         self.toolbar_manager = ToolbarManager(self)

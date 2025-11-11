@@ -134,7 +134,8 @@ def main():
     controller = MainWindowController(
         view=window,
         current_user=user,
-        app_context=app_context
+        app_context=app_context,
+        is_dev_mode=args.dev
     )
 
     window.show()

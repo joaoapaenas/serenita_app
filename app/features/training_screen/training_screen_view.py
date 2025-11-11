@@ -37,7 +37,7 @@ class TrainingScreenView(QWidget):
         self.exercise_details_view = ExerciseDetailsView()
         self.study_tab_layout.addWidget(self.exercise_details_view)
         
-        self.tab_widget.addTab(self.study_tab, "Study")
+        self.tab_widget.addTab(self.study_tab, "Log Exercises")
 
         # Add "Session Overview/Progress" tab
         self.session_overview_tab = QWidget()

@@ -16,6 +16,7 @@ class ConfigurationsLandingView(QWidget):
     manage_exams_requested = Signal()
     manage_subjects_requested = Signal()
     app_settings_requested = Signal()
+    developer_tools_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
@@ -68,4 +69,19 @@ class ConfigurationsLandingView(QWidget):
         settings_card.clicked.connect(self.app_settings_requested.emit)
         cards_layout.addWidget(settings_card)
 
+        # Card for developer tools
+        self.dev_tools_card = ActionCardWidget(
+            title_text="Developer Tools",
+            desc_text="Tools for testing and development.",
+            icon_name="DEV_TOOLS"
+        )
+        self.dev_tools_card.clicked.connect(self.developer_tools_requested.emit)
+        cards_layout.addWidget(self.dev_tools_card)
+        self.dev_tools_card.setVisible(False) # Hidden by default
+
         main_layout.addStretch()
+
+    def set_developer_mode(self, is_dev: bool):
+        """Shows or hides the developer tools card."""
+        self.dev_tools_card.setVisible(is_dev)
+    

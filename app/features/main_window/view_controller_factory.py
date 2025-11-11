@@ -49,9 +49,10 @@ log = logging.getLogger(__name__)
 class ViewControllerFactory:
     """A factory responsible for creating and wiring up all sub-controllers and their views."""
 
-    def __init__(self, app_context: AppContext, navigator):
+    def __init__(self, app_context: AppContext, navigator, is_dev_mode: bool = False):
         self.app_context = app_context
         self.navigator = navigator
+        self.is_dev_mode = is_dev_mode
         self._active_onboarding_controller = None
 
     def is_onboarding_active(self) -> bool:
@@ -82,7 +83,12 @@ class ViewControllerFactory:
 
     def create_configurations_landing(self) -> QWidget:
         view = ConfigurationsLandingView(parent=self.navigator.view)
-        controller = ConfigurationsLandingController(view=view, navigator=self.navigator)
+        view.set_developer_mode(self.is_dev_mode)
+        controller = ConfigurationsLandingController(
+            view=view,
+            navigator=self.navigator,
+            conn_factory=self.app_context.conn_factory
+        )
         view.setProperty("controller", controller)
         return view
 
