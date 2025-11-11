@@ -1,0 +1,1 @@
+# This empty file makes 'exam_manager' a Python package.

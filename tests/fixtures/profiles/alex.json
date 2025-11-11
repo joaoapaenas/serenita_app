@@ -1,0 +1,105 @@
+{
+
+  "user": {
+
+    "name": "alex",
+
+    "study_level": "Intermediate"
+
+  },
+
+  "exam": {
+
+    "name": "CNU - Bloco 4",
+
+    "area": "Trabalho e Previdência"
+
+  },
+
+  "cycle": {
+
+    "name": "Junho - Reta Final",
+
+    "is_active": true,
+
+    "daily_goal_blocks": 4,
+
+    "subjects": [
+
+      {
+
+        "name": "Direito Constitucional",
+
+        "relevance_weight": 5,
+
+        "volume_weight": 4,
+
+        "difficulty_weight": 2,
+
+        "current_strategic_state": "MAINTAIN"
+
+      },
+
+      {
+
+        "name": "Administração Financeira e Orçamentária (AFO)",
+
+        "relevance_weight": 4,
+
+        "volume_weight": 5,
+
+        "difficulty_weight": 4,
+
+        "current_strategic_state": "DEEP_WORK"
+
+      }
+
+    ],
+
+    "sessions": [
+
+      {
+
+        "subject_name": "Direito Constitucional",
+
+        "start_time": "2024-05-15T20:00:00Z",
+
+        "liquid_duration_sec": 6000,
+
+        "questions": [
+
+          {"topic_name": "poder_judiciario", "is_correct": true},
+
+          {"topic_name": "poder_judiciario", "is_correct": true},
+
+          {"topic_name": "poder_judiciario", "is_correct": false}
+
+        ]
+
+      },
+
+      {
+
+        "subject_name": "Administração Financeira e Orçamentária (AFO)",
+
+        "start_time": "2024-05-16T08:00:00Z",
+
+        "liquid_duration_sec": 6300,
+
+        "questions": [
+
+          {"topic_name": "receita_publica", "is_correct": true},
+
+          {"topic_name": "receita_publica", "is_correct": false},
+
+          {"topic_name": "receita_publica", "is_correct": true}
+
+        ]
+
+      }
+
+    ]
+
+  }
+
+}

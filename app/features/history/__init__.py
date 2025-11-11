@@ -1,0 +1,1 @@
+# This empty file makes the 'history' directory a Python package.

@@ -1,0 +1,189 @@
+/* app/assets/styles/style_dark.qss - Dark Theme (formerly style.qss) */
+
+* {
+    color: #EAEAEA;
+    font-family: "Geist";
+    font-size: 10pt;
+}
+
+QMainWindow {
+    background-color: #1E1E1E;
+}
+
+QWidget#mainPane, QWidget#Sidebar, QWidget#humanFactorWidget {
+    background-color: #252525;
+    border-radius: 8px;
+}
+
+/* Scroll Areas */
+QScrollArea#transparentScrollArea {
+    border: none;
+    background: transparent;
+}
+QScrollArea#transparentScrollArea > QWidget > QWidget {
+    background: transparent;
+}
+
+/* TreeView Styling */
+QTreeView {
+    border: none;
+}
+QTreeView::item {
+    padding: 5px;
+}
+QTreeView::item:selected {
+    /* The foreground color is now handled by the palette, not the stylesheet */
+    background-color: #FFCC00;
+    border-radius: 4px;
+}
+QTreeView::item:focus {
+    outline: none;
+}
+QTreeView::branch {
+    background: transparent;
+}
+/* Use qtawesome URL parameters to color the icons for the dark theme */
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+    border-image: none;
+    image: url(:/qtawesome/fa6s/angle-right.svg?color=EAEAEA);
+}
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings {
+    border-image: none;
+    image: url(:/qtawesome/fa6s/angle-down.svg?color=EAEAEA);
+}
+
+
+/* Labels */
+QLabel#viewTitle {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+QLabel#blockTitle {
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+QLabel#lightText, QLabel#focusSummaryText, QGroupBox {
+    color: #AAAAAA;
+}
+
+QLabel#sectionHeader {
+    font-weight: bold;
+    color: #888888;
+    font-size: 9pt;
+    text-transform: uppercase;
+}
+
+QLabel#timerDisplay {
+    font-size: 48pt;
+    font-weight: bold;
+    color: #FFCC00;
+}
+
+
+/* Buttons */
+QPushButton {
+    background-color: #3E3E3E;
+    border: 1px solid #555555;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+QPushButton:hover {
+    background-color: #4A4A4A;
+    border: 1px solid #666666;
+}
+QPushButton:pressed {
+    background-color: #555555;
+}
+
+QPushButton#primaryButton {
+    background-color: #FFCC00;
+    color: #111111;
+    border: none;
+    font-weight: bold;
+}
+QPushButton#primaryButton:hover {
+    background-color: #FFD740;
+}
+QPushButton#primaryButton:pressed {
+    background-color: #FFC107;
+}
+
+QPushButton#dangerButton {
+    background-color: #D32F2F;
+    color: #FFFFFF;
+    border: none;
+}
+QPushButton#dangerButton:hover {
+    background-color: #E53935;
+}
+
+
+/* Other Widgets */
+QFrame#blockWidget, QWidget#blockWidget {
+    background-color: #2D2D2D;
+    border: 1px solid #444444;
+    border-radius: 8px;
+}
+
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
+    background-color: #1E1E1E;
+    border: 1px solid #555555;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+/* Use the palette color for the dropdown icon */
+QComboBox::down-arrow {
+    image: url(:/qtawesome/fa6s/angle-down.svg?color=palette(text));
+}
+
+
+QFrame#separator {
+    background-color: #444444;
+    height: 1px;
+    border: none;
+}
+
+QProgressBar {
+    border: 1px solid #555555;
+    border-radius: 4px;
+    text-align: center;
+    color: #EAEAEA;
+    background-color: #3E3E3E;
+}
+QProgressBar::chunk {
+    background-color: #FFCC00;
+    border-radius: 3px;
+}
+
+/* Tables */
+QTableView {
+    background-color: #2D2D2D;
+    border: 1px solid #444444;
+    gridline-color: #444444;
+}
+QTableView::item {
+    padding: 5px;
+}
+QTableView::item:selected {
+    background-color: #FFCC00;
+    color: #111111;
+}
+QHeaderView::section {
+    background-color: #3E3E3E;
+    padding: 4px;
+    border: 1px solid #444444;
+    font-weight: bold;
+}
+QTableView QTableCornerButton::section {
+    background-color: #3E3E3E;
+    border: 1px solid #444444;
+}

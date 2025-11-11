@@ -1,0 +1,665 @@
+{
+  "user": {
+    "name": "elisa_2",
+    "study_level": "Intermediário"
+  },
+  "exam": {
+    "name": "SEFAZ-SP - Agente Fiscal",
+    "area": "Fiscal"
+  },
+  "cycle": {
+    "name": "Ciclo Regular - 2025",
+    "is_active": true,
+    "daily_goal_blocks": 2,
+    "subjects": [
+      {
+        "name": "Auditoria",
+        "relevance_weight": 5,
+        "volume_weight": 4,
+        "difficulty_weight": 4,
+        "current_strategic_state": "DISCOVERY"
+      },
+      {
+        "name": "Contabilidade Geral",
+        "relevance_weight": 5,
+        "volume_weight": 4,
+        "difficulty_weight": 3,
+        "current_strategic_state": "MAINTAIN"
+      },
+      {
+        "name": "Legislação Aduaneira",
+        "relevance_weight": 4,
+        "volume_weight": 3,
+        "difficulty_weight": 3,
+        "current_strategic_state": "CONQUER"
+      },
+      {
+        "name": "Comércio Internacional",
+        "relevance_weight": 5,
+        "volume_weight": 5,
+        "difficulty_weight": 2,
+        "current_strategic_state": "CEMENT"
+      }
+    ],
+    "sessions": [
+      {
+        "subject_name": "Comércio Internacional",
+        "start_time": "2025-11-02T11:14:05Z",
+        "liquid_duration_sec": 5860,
+        "questions": [
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-09-17T09:14:05Z",
+        "liquid_duration_sec": 6401,
+        "questions": [
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-09-21T07:14:05Z",
+        "liquid_duration_sec": 3013,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Comércio Internacional",
+        "start_time": "2025-10-30T23:14:05Z",
+        "liquid_duration_sec": 3873,
+        "questions": [
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-09-25T07:14:05Z",
+        "liquid_duration_sec": 3680,
+        "questions": [
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Contabilidade Geral",
+        "start_time": "2025-11-01T22:14:05Z",
+        "liquid_duration_sec": 3684,
+        "questions": [
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Contabilidade Geral",
+        "start_time": "2025-11-03T20:14:05Z",
+        "liquid_duration_sec": 3558,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-10-23T00:14:05Z",
+        "liquid_duration_sec": 6215,
+        "questions": [
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Auditoria",
+        "start_time": "2025-09-15T19:14:05Z",
+        "liquid_duration_sec": 3534,
+        "questions": [
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Auditoria",
+        "start_time": "2025-10-21T04:14:05Z",
+        "liquid_duration_sec": 5136,
+        "questions": [
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          }
+        ]
+      }
+    ]
+  }
+}

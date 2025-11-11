@@ -1,0 +1,270 @@
+/* =============================================================================
+   Light Theme Stylesheet for Serenita
+   ========================================================================== */
+
+/* === GENERAL & WINDOW === */
+QMainWindow, QDialog {
+    background-color: #F0F0F0; /* Light gray base */
+    color: #212121; /* Very dark gray text for high contrast */
+}
+
+/* === WIDGETS === */
+/* General widgets like QLabel, QLineEdit, etc. */
+QWidget {
+    background-color: transparent;
+    color: #212121;
+}
+
+/* Container widgets like GroupBoxes and stacked widget contents */
+#blockWidget, QGroupBox {
+    background-color: #FFFFFF; /* White cards */
+    border: 1px solid #E0E0E0; /* Subtle light gray border */
+    border-radius: 8px;
+    padding: 10px;
+    color: #212121;
+}
+
+QGroupBox {
+    font-weight: bold;
+    padding-top: 15px; /* Space for the title */
+    margin-top: 5px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 0 5px;
+    background-color: #FFFFFF; /* Match card background */
+    color: #424242; /* Darker gray for title */
+}
+
+/* Specific frame for routine guidance */
+#routinePathFrame {
+    background-color: #E3F2FD; /* Light blue background */
+    border: 1px solid #90CAF9; /* Soft blue border */
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Separator lines */
+QFrame[objectName="separator"] {
+    max-height: 1px;
+    background-color: #E0E0E0; /* Light gray separator */
+}
+
+/* === BUTTONS === */
+QPushButton {
+    background-color: #E0E0E0; /* Light gray button */
+    color: #212121;
+    border: 1px solid #BDBDBD;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+    background-color: #D6D6D6; /* Slightly darker gray on hover */
+    border-color: #B0B0B0;
+}
+
+QPushButton:pressed {
+    background-color: #C0C0C0; /* Even darker on press */
+}
+
+QPushButton:disabled {
+    background-color: #EEEEEE; /* Very light gray when disabled */
+    color: #BDBDBD;
+}
+
+/* Primary action buttons */
+#primaryButton, QPushButton[objectName="primaryButton"] {
+    background-color: #FFCC00; /* Accent yellow */
+    color: #111111; /* Black text for contrast */
+    border: none;
+    font-weight: bold;
+}
+
+#primaryButton:hover, QPushButton[objectName="primaryButton"]:hover {
+    background-color: #FFD740; /* Lighter yellow */
+}
+
+/* Danger action buttons */
+#dangerButton, QPushButton[objectName="dangerButton"] {
+    background-color: #E57373; /* Danger red */
+    color: #FFFFFF; /* White text */
+    border: none;
+    font-weight: bold;
+}
+
+#dangerButton:hover, QPushButton[objectName="dangerButton"]:hover {
+    background-color: #EF9A9A; /* Lighter red */
+}
+
+/* Plan selector buttons */
+#planSelectorButton {
+    background-color: transparent;
+    border: 1px solid #BDBDBD;
+    color: #616161;
+}
+
+#planSelectorButton:checked {
+    background-color: #424242; /* Dark background for selected */
+    color: #FFFFFF; /* White text */
+    border: 1px solid #424242;
+}
+
+/* === INPUT WIDGETS === */
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
+    background-color: #FFFFFF;
+    color: #212121;
+    border: 1px solid #BDBDBD;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 1px solid #FFCC00; /* Accent color on focus */
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+
+QComboBox::down-arrow {
+    image: url(app/assets/icons/chevron-down-dark.png); /* Using a dark icon */
+    width: 12px;
+    height: 12px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #FFFFFF;
+    color: #212121;
+    border: 1px solid #BDBDBD;
+    selection-background-color: #FFCC00; /* Accent for selection */
+    selection-color: #111111;
+}
+
+/* === TABLE & LISTS === */
+QTableWidget, QListWidget, QTreeView {
+    background-color: #FFFFFF;
+    color: #212121;
+    border: 1px solid #E0E0E0;
+    alternate-background-color: #F5F5F5; /* Very light gray for alternate rows */
+}
+
+QHeaderView::section {
+    background-color: #FAFAFA; /* Off-white header */
+    color: #424242;
+    padding: 4px;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+
+/* === SPECIALIZED WIDGETS === */
+/* Sidebar */
+#Sidebar {
+    background-color: #FAFAFA; /* Off-white for sidebar */
+}
+
+#Sidebar QPushButton {
+    border: none;
+    text-align: left;
+    padding: 8px;
+    color: #424242;
+}
+
+#Sidebar QPushButton:hover {
+    background-color: #E0E0E0;
+}
+
+/* TreeView in Sidebar */
+QTreeView {
+    background-color: transparent;
+}
+QTreeView::item {
+    padding: 5px;
+}
+QTreeView::item:selected {
+    background-color: #FFCC00;
+    color: #111111;
+    border-radius: 4px;
+}
+QTreeView::branch {
+    background: transparent;
+}
+
+
+/* Main Pane */
+#mainPane {
+    background-color: #F5F5F5; /* Slightly different gray for main area */
+}
+
+/* Toolbar */
+QToolBar {
+    background-color: #F0F0F0;
+    border: none;
+}
+
+/* Progress Bar */
+QProgressBar {
+    border: 1px solid #BDBDBD;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #FFFFFF;
+    color: #212121;
+}
+
+QProgressBar::chunk {
+    background-color: #FFCC00; /* Accent color for progress */
+    border-radius: 3px;
+}
+
+/* ScrollArea */
+#transparentScrollArea {
+    background-color: transparent;
+    border: none;
+}
+
+/* === TYPOGRAPHY === */
+/* Titles inside views (e.g., "Today's Plan") */
+#viewTitle {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #333333;
+}
+
+/* Titles on cards */
+#blockTitle {
+    font-weight: bold;
+    color: #212121;
+}
+
+/* Sub-headings */
+#sectionHeader {
+    font-weight: bold;
+    color: #757575; /* Gray for less emphasis */
+    text-transform: uppercase;
+}
+
+/* Dim text for descriptions, etc. */
+#lightText {
+    color: #616161;
+}
+
+/* Timer display */
+#timerDisplay {
+    font-size: 48pt;
+    font-weight: bold;
+    color: #212121;
+}
+
+/* Large display text (e.g., for completion messages) */
+#largeDisplay {
+    font-size: 16pt;
+    color: #4CAF50; /* Green for success */
+}
+
+/* Completed Work Unit Card */
+WorkUnitCardWidget[completed="true"] {
+    background-color: #E8F5E9; /* Light green background */
+    border-color: #A5D6A7;
+}

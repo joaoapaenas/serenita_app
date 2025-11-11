@@ -1,0 +1,23 @@
+[project]
+name = "serenita-app"
+version = "0.1.0"
+description = "A smart study cycle application."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # It's good practice to list your main dependencies here
+    "pyside6",
+    "qtawesome>=1.4.0",
+]
+
+[tool.setuptools.packages.find]
+# This line tells setuptools to look for packages inside the 'app' directory
+where = ["app"]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.10.3",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+]

@@ -1,0 +1,53 @@
+QWidget {
+    font-family: "Geist"; /* Fallback for all widgets */
+}
+
+
+/* Specifically target data-display widgets to ensure they use Geist */
+QTreeView, QTableWidget, QListWidget {
+    font-family: "Geist";
+}
+
+#largeDisplay {
+    font-size: 28pt;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+#timerDisplay {
+    font-size: 80pt;
+    font-weight: 200; /* Use a light font weight for modern look */
+    color: #FFFFFF;
+}
+#StudySessionWidget QTextEdit {
+    min-height: 80px;
+}
+
+#Sidebar {
+    background-color: #2D2D2D;
+}
+QTreeView {
+    background-color: transparent;
+}
+
+
+
+QPushButton#dangerButton {
+    background-color: #C62828; /* A strong, dark red */
+    color: white;
+    border: 1px solid #B71C1C;
+    padding: 5px 15px;
+    border-radius: 4px;
+}
+
+QPushButton#dangerButton:hover {
+    background-color: #D32F2F; /* A slightly lighter red on hover */
+}
+
+QPushButton#dangerButton:pressed {
+    background-color: #B71C1C;
+}
+
+QGroupBox {
+    border-color: 'red'
+}

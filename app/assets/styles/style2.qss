@@ -1,0 +1,200 @@
+
+#largeDisplay {
+    font-size: 28pt;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+QTreeView::item:selected {
+                color: #111111; /* Dark text on yellow background */
+            }
+            QTreeView::item:focus {
+                outline: none;
+            }
+
+QFrame#blockWidget[completed="true"] {
+    background-color: #383838; /* A slightly darker background */
+    opacity: 0.6;
+}
+
+/* ----- 1. Next Subject Indicator ----- */
+#nextSubjectIndicator {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #FFCC00; /* Bright yellow color to match the theme */
+    background-color: #2D2D2D; /* Dark background */
+    padding: 20px;
+    border-radius: 12px;
+    margin: 15px;
+    border: 2px solid #FFCC00; /* Yellow border */
+    text-align: center;
+}
+
+/* ----- 2. Next Subject Card ----- */
+#nextSubjectCard {
+    background-color: #FFF8E1; /* Light yellow background */
+    border: 3px solid #FFCC00; /* Thick yellow border */
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+#nextSubjectCard:hover {
+    background-color: #FFECB3; /* Slightly darker yellow on hover */
+    border: 3px solid #FFD700; /* Brighter yellow border on hover */
+}
+
+/* ----- 3. Completed Task Indicator ----- */
+#completedIndicator {
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+/* ----- 4. Plan Selector Buttons ----- */
+#planSelectorButton {
+    background-color: #3C3C3C;
+    color: #FFFFFF;
+    border: 1px solid #555555;
+    border-radius: 6px;
+    padding: 8px 15px;
+    margin: 5px;
+    font-weight: 500;
+}
+
+#planSelectorButton:checked {
+    background-color: #FFCC00;
+    color: #111111;
+    border: 1px solid #FFD700;
+    font-weight: 600;
+}
+
+#planSelectorButton:hover {
+    background-color: #4A4A4A;
+    border: 1px solid #666666;
+}
+
+#planSelectorButton:checked:hover {
+    background-color: #FFD700;
+}
+
+/* ----- 5. Routine Path Frame ----- */
+#routinePathFrame {
+    background-color: #2D2D2D;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    border: 2px solid #FFCC00;
+}
+
+/* ----- 3. Typography (NEW SECTION) ----- */
+/* Set the default font for the entire application */
+QWidget {
+    font-family: "Geist"; /* Fallback for all widgets */
+    font-size: 11pt;
+}
+
+
+/* Specifically target data-display widgets to ensure they use Geist */
+QTreeView, QTableWidget, QListWidget {
+    font-family: "Geist";
+}
+
+#timerDisplay {
+    font-size: 80pt;
+    font-weight: 200; /* Use a light font weight for modern look */
+    color: #FFFFFF;
+}
+#StudySessionWidget QTextEdit {
+    min-height: 80px;
+}
+
+
+/* You could even set a different font for buttons if you wanted */
+QPushButton {
+    /* If you don't specify font-family here, it will inherit from QWidget */
+    font-weight: 500; /* Medium weight */
+}
+
+#Sidebar {
+    background-color: #2D2D2D;
+}
+QTreeView {
+    background-color: transparent;
+}
+QTreeView::item {
+    padding: 8px 10px;
+}
+
+QTreeView::item:hover {
+
+}
+QTreeView::item:selected {
+    background-color: #FFCC00;
+    color: #111111;
+    font-weight: 600;
+}
+
+QTreeItem {
+    background-color: 'yellow';
+}
+#Sidebar QPushButton {
+    text-align: left;
+    padding: 8px 10px;
+
+}
+#Sidebar QPushButton:hover {
+    background-color: rgba(255, 255, 255, 15);
+}
+
+
+QSpinBox::up-arrow {
+    image: url(app/assets/icons/up-arrow.svg); /* Requires SVG icons */
+}
+QSpinBox::down-arrow {
+    image: url(app/assets/icons/down-arrow.svg); /* Requires SVG icons */
+}
+
+
+
+
+
+
+/* ----- Menu Bar & Tool Bar Styling (New) ----- */
+QMenuBar {
+    background-color: #2D2D2D;
+    border-bottom: 1px solid #404040;
+}
+QMenuBar::item {
+    padding: 4px 10px;
+}
+QMenuBar::item:selected {
+    background-color: #4A4A4A;
+}
+QMenu {
+    background-color: #3C3C3C;
+    border: 1px solid #555555;
+}
+QMenu::item:selected {
+    background-color: #FFCC00;
+    color: #111111;
+}
+
+QToolBar {
+    background-color: #2D2D2D;
+    border: none;
+    padding: 2px;
+}
+/* Style the QActions when placed in a toolbar */
+QToolBar QToolButton {
+    padding: 6px;
+    border-radius: 4px;
+}
+QToolBar QToolButton:hover {
+    background-color: rgba(255, 255, 255, 15);
+}
+QToolBar QToolButton:pressed {
+    background-color: rgba(255, 255, 255, 25);
+}
+QToolBar QToolButton:disabled {
+    opacity: 0.3;
+}

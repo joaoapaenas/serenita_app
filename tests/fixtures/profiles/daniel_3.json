@@ -1,0 +1,696 @@
+{
+  "user": {
+    "name": "daniel_3",
+    "study_level": "Iniciante"
+  },
+  "exam": {
+    "name": "ISS-RJ - Fiscal de Rendas",
+    "area": "Fiscal"
+  },
+  "cycle": {
+    "name": "Ciclo Pós-Edital - 2025",
+    "is_active": true,
+    "daily_goal_blocks": 5,
+    "subjects": [
+      {
+        "name": "Direito Tributário",
+        "relevance_weight": 5,
+        "volume_weight": 5,
+        "difficulty_weight": 3,
+        "current_strategic_state": "CONQUER"
+      },
+      {
+        "name": "Auditoria",
+        "relevance_weight": 4,
+        "volume_weight": 2,
+        "difficulty_weight": 3,
+        "current_strategic_state": "DEEP_WORK"
+      },
+      {
+        "name": "Legislação Aduaneira",
+        "relevance_weight": 3,
+        "volume_weight": 2,
+        "difficulty_weight": 4,
+        "current_strategic_state": "MAINTAIN"
+      },
+      {
+        "name": "Comércio Internacional",
+        "relevance_weight": 3,
+        "volume_weight": 4,
+        "difficulty_weight": 3,
+        "current_strategic_state": "MAINTAIN"
+      }
+    ],
+    "sessions": [
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-09-27T16:14:05Z",
+        "liquid_duration_sec": 6134,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Direito Tributário",
+        "start_time": "2025-10-21T21:14:05Z",
+        "liquid_duration_sec": 6031,
+        "questions": [
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-10-18T19:14:05Z",
+        "liquid_duration_sec": 7191,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Comércio Internacional",
+        "start_time": "2025-10-25T19:14:05Z",
+        "liquid_duration_sec": 4579,
+        "questions": [
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Direito Tributário",
+        "start_time": "2025-10-04T06:14:05Z",
+        "liquid_duration_sec": 5054,
+        "questions": [
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Direito Tributário",
+        "start_time": "2025-10-23T20:14:05Z",
+        "liquid_duration_sec": 4186,
+        "questions": [
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Comércio Internacional",
+        "start_time": "2025-10-21T15:14:05Z",
+        "liquid_duration_sec": 6580,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-10-23T14:14:05Z",
+        "liquid_duration_sec": 2979,
+        "questions": [
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Direito Tributário",
+        "start_time": "2025-09-21T16:14:05Z",
+        "liquid_duration_sec": 6683,
+        "questions": [
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "subject_name": "Legislação Aduaneira",
+        "start_time": "2025-09-09T17:14:05Z",
+        "liquid_duration_sec": 4009,
+        "questions": [
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_5",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_2",
+            "is_correct": false
+          },
+          {
+            "topic_name": "tópico_3",
+            "is_correct": true
+          },
+          {
+            "topic_name": "tópico_4",
+            "is_correct": true
+          }
+        ]
+      },
+      {
+        "subject_name": "Direito Tributário",
+        "start_time": "2025-10-06T22:14:05Z",
+        "liquid_duration_sec": 2947,
+        "questions": [
+          {
+            "topic_name": "tópico_1",
+            "is_correct": true
+          }
+        ]
+      }
+    ]
+  }
+}
