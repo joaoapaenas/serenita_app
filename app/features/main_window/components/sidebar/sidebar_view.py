@@ -61,10 +61,13 @@ class SidebarView(QWidget):
         """)
 
         self.add_tree_item("Overview", {"type": "overview"}, icon_name="OVERVIEW")
-        self.add_tree_item("Dashboard", {"type": "performance_dashboard"}, icon_name="VIEW_PERFORMANCE")
-        self.add_tree_item("Performance", {"type": "performance_graphs"}, icon_name="VIEW_PERFORMANCE")
+        self.add_tree_item("Dashboard", {"type": "performance_dashboard"}, icon_name="VIEW_PERFORMANCE",
+                           tooltip="Your daily performance summary.")
+        self.add_tree_item("Performance", {"type": "performance_graphs"}, icon_name="VIEW_PERFORMANCE",
+                           tooltip="Historical evolution graphs.")
         self.add_tree_item("History", {"type": "history"}, icon_name="HISTORY")
-        self.add_tree_item("Analytics", {"type": "analytics"}, icon_name="REBALANCE")
+        self.add_tree_item("Analytics", {"type": "analytics"}, icon_name="REBALANCE",
+                           tooltip="In-depth analysis of strengths and weaknesses.")
         self.add_tree_item("Training", {"type": "training_screen"}, icon_name="REBALANCE")
         self.subjects_parent_item = self.add_tree_item("Subjects", {"type": "subjects_category"}, icon_name="SUBJECTS")
         self.add_tree_item("Help", {"type": "help"}, icon_name="HELP")
@@ -109,7 +112,7 @@ class SidebarView(QWidget):
             item.setIcon(get_icon(icon_name, color=color))
 
     def add_tree_item(self, text: str, user_data: dict, parent_item: QStandardItem | None = None,
-                      icon_name: str | None = None):
+                      icon_name: str | None = None, tooltip: str | None = None):
         """Helper to add a styled item to the tree view."""
         icon = get_icon(icon_name) if icon_name else None
         item = QStandardItem(icon, text) if icon else QStandardItem(text)
@@ -117,6 +120,8 @@ class SidebarView(QWidget):
         item.setData(user_data, Qt.ItemDataRole.UserRole)
         if icon_name:
             item.setData(icon_name, self.ICON_NAME_ROLE)
+        if tooltip:
+            item.setToolTip(tooltip)
 
         (parent_item if parent_item else self.model).appendRow(item)
         return item

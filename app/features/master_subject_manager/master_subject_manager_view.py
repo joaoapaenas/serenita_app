@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
 
 from app.core.constants import PAGE_MARGINS, SPACING_LARGE
 from app.core.icon_manager import get_icon
-from app.models.subject import MasterSubject
+from app.models.subject import Subject
 
 
 class MasterSubjectManagerView(QWidget):
@@ -14,8 +14,8 @@ class MasterSubjectManagerView(QWidget):
     View for managing master subjects (CRUD).
     """
     add_requested = Signal()
-    edit_requested = Signal(MasterSubject)
-    delete_requested = Signal(MasterSubject)
+    edit_requested = Signal(Subject)
+    delete_requested = Signal(Subject)
     back_requested = Signal()
 
     def __init__(self, parent=None):
@@ -57,7 +57,7 @@ class MasterSubjectManagerView(QWidget):
         footer_layout.addWidget(back_button)
         main_layout.addLayout(footer_layout)
 
-    def populate_subjects(self, subjects: list[MasterSubject]):
+    def populate_subjects(self, subjects: list[Subject]):
         """Populates the table with the list of master subjects."""
         self.table.setRowCount(len(subjects))
         for row, subject in enumerate(subjects):

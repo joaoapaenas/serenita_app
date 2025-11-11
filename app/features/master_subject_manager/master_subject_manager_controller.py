@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QMessageBox
 from app.common.error_handler import show_error_message
 from app.core.signals import app_signals
 from app.services.interfaces import IMasterSubjectService
+from app.models.subject import Subject
 from .master_subject_editor_dialog import MasterSubjectEditorDialog
 from .master_subject_manager_view import MasterSubjectManagerView
 
@@ -55,7 +56,7 @@ class MasterSubjectManagerController:
                 except Exception as e:
                     show_error_message(self._view, "Error", f"Could not create subject '{new_name}'.", str(e))
 
-    def _on_edit(self, subject):
+    def _on_edit(self, subject: Subject):
         """Handles the request to edit an existing subject."""
         dialog = MasterSubjectEditorDialog(subject_name=subject.name, parent=self._view)
         if dialog.exec():
@@ -68,7 +69,7 @@ class MasterSubjectManagerController:
                 except Exception as e:
                     show_error_message(self._view, "Error", f"Could not update subject '{subject.name}'.", str(e))
 
-    def _on_delete(self, subject):
+    def _on_delete(self, subject: Subject):
         """Handles the request to delete a subject."""
         reply = QMessageBox.warning(
             self._view,
