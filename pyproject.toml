@@ -8,16 +8,18 @@ dependencies = [
     # It's good practice to list your main dependencies here
     "pyside6",
     "qtawesome>=1.4.0",
+    "sqlalchemy",
 ]
 
 [tool.setuptools.packages.find]
 # This line tells setuptools to look for packages inside the 'app' directory
 where = ["app"]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "coverage>=7.10.3",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "pytest-mock>=3.14.1",
+    "pytest-qt",
 ]
