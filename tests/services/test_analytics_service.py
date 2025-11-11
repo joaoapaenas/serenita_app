@@ -43,10 +43,10 @@ def test_get_daily_performance_no_data(analytics_service, mock_db_connection):
                 COUNT(QP.id) as total_questions
             FROM question_performance AS QP
             JOIN study_sessions AS SS ON QP.session_id = SS.id
-            WHERE SS.cycle_id = :cycle_id
-                GROUP BY session_date
-                ORDER BY session_date ASC;
-"""
+            WHERE SS.cycle_id = :cycle_id GROUP BY session_date
+                ORDER BY session_date ASC;"""
+    
+    result = analytics_service.get_daily_performance(cycle_id) # Define result
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
     assert str(actual_call_args[0]) == expected_query
@@ -75,10 +75,8 @@ def test_get_daily_performance_with_data(analytics_service, mock_db_connection):
                 COUNT(QP.id) as total_questions
             FROM question_performance AS QP
             JOIN study_sessions AS SS ON QP.session_id = SS.id
-            WHERE SS.cycle_id = :cycle_id
-                GROUP BY session_date
-                ORDER BY session_date ASC;
-"""
+            WHERE SS.cycle_id = :cycle_id GROUP BY session_date
+                ORDER BY session_date ASC;"""
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
     assert str(actual_call_args[0]) == expected_query
@@ -106,17 +104,13 @@ def test_get_daily_performance_with_days_ago(analytics_service, mock_db_connecti
                 COUNT(QP.id) as total_questions
             FROM question_performance AS QP
             JOIN study_sessions AS SS ON QP.session_id = SS.id
-            WHERE SS.cycle_id = :cycle_id
-            AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')
-                GROUP BY session_date
-                ORDER BY session_date ASC;
-"""
+            WHERE SS.cycle_id = :cycle_id AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days') GROUP BY session_date
+                ORDER BY session_date ASC;"""
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
     assert str(actual_call_args[0]) == expected_query
     assert actual_call_args[1] == {"cycle_id": cycle_id, "days_ago": days_ago}
     assert result == expected
-
 
 def test_get_weekly_summary_no_daily_data(analytics_service, mocker):
     """Test get_weekly_summary when get_daily_performance returns no data."""

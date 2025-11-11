@@ -19,7 +19,7 @@ def session_setup(mock_db_factory):
     user = user_service.create_user("Test User", "Beginner")
     exam_id = exam_service.create(user_id=user.id, name="Test Exam")
     cycle_id = cycle_service.create("Test Cycle", 60, True, 2, exam_id, "Adaptive")
-    subject_id = master_subject_service.add_master_subject("Test Subject")
+    subject_id = master_subject_service.create("Test Subject")
     weights = {
         "relevance": 1,
         "volume": 1,

@@ -27,20 +27,23 @@ class SqliteAnalyticsService(IAnalyticsService):
         is_sqlalchemy_conn = isinstance(conn, Connection)
 
         if is_sqlalchemy_conn:
-            query = """SELECT
+            query_parts = ["""SELECT
                 DATE(SS.start_time) as session_date,
                 SUM(QP.is_correct) as total_correct,
                 COUNT(QP.id) as total_questions
             FROM question_performance AS QP
             JOIN study_sessions AS SS ON QP.session_id = SS.id
-            WHERE SS.cycle_id = :cycle_id
-                GROUP BY session_date
-                ORDER BY session_date ASC;"""
+            WHERE SS.cycle_id = :cycle_id"""]
             params = {"cycle_id": cycle_id}
 
             if days_ago is not None:
-                query += " AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')"
+                query_parts.append(" AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')")
                 params["days_ago"] = days_ago
+            
+            query_parts.append(""" GROUP BY session_date
+                ORDER BY session_date ASC;""")
+            
+            query = "".join(query_parts)
             rows = conn.execute(text(query), params).mappings().fetchall()
         else: # Assume sqlite3.Connection
             query = """

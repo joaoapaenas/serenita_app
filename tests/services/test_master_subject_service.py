@@ -105,36 +105,64 @@ def test_get_all_master_subjects_with_data(master_subject_service, mock_db_conne
     )
 
 
-def test_add_master_subject_success(master_subject_service, mock_db_connection):
-    """Test successfully adding a master subject."""
+def test_create_master_subject_success(master_subject_service, mock_db_connection):
+    """Test successfully creating a master subject."""
     subject_name = "Chemistry"
-    subject_color = "green"
     mock_db_connection.lastrowid = 3
 
-    result = master_subject_service.add_master_subject(subject_name, subject_color)
+    result = master_subject_service.create(subject_name)
 
     assert result == 3
     mock_db_connection.execute.assert_called_once_with(
-        "INSERT INTO subjects (name, color) VALUES (?, ?)",
-        (subject_name, subject_color)
+        "INSERT INTO subjects (name) VALUES (?)",
+        (subject_name,)
     )
     mock_db_connection.commit.assert_called_once()
 
 
-def test_add_master_subject_duplicate_name(master_subject_service, mock_db_connection):
-    """Test adding a master subject with a duplicate name."""
+def test_create_master_subject_duplicate_name(master_subject_service, mock_db_connection):
+    """Test creating a master subject with a duplicate name."""
     subject_name = "Existing Subject"
-    subject_color = "yellow"
     mock_db_connection.execute.side_effect = sqlite3.IntegrityError("UNIQUE constraint failed: subjects.name")
 
-    result = master_subject_service.add_master_subject(subject_name, subject_color)
+    result = master_subject_service.create(subject_name)
 
     assert result is None
     mock_db_connection.execute.assert_called_once_with(
-        "INSERT INTO subjects (name, color) VALUES (?, ?)",
-        (subject_name, subject_color)
+        "INSERT INTO subjects (name) VALUES (?)",
+        (subject_name,)
     )
     mock_db_connection.commit.assert_not_called()
+
+
+def test_update_master_subject_success(master_subject_service, mock_db_connection):
+    """Test successfully updating a master subject's name."""
+    subject_id = 1
+    old_name = "Old Name"
+    new_name = "New Name"
+
+    master_subject_service.update(subject_id, new_name)
+
+    mock_db_connection.execute.assert_called_once_with(
+        "UPDATE subjects SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (new_name, subject_id)
+    )
+    mock_db_connection.commit.assert_called_once()
+
+
+def test_delete_master_subject_success(master_subject_service, mock_db_connection):
+    """Test successfully deleting a master subject and its topics."""
+    subject_id = 1
+    
+    master_subject_service.delete(subject_id)
+
+    # Verify that topics are deleted first, then the subject
+    expected_calls = [
+        call("DELETE FROM topics WHERE subject_id = ?", (subject_id,)),
+        call("DELETE FROM subjects WHERE id = ?", (subject_id,))
+    ]
+    mock_db_connection.execute.assert_has_calls(expected_calls, any_order=False)
+    mock_db_connection.commit.assert_called_once()
 
 
 def test_get_topics_for_subject_no_data(master_subject_service, mock_db_connection):

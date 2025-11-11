@@ -30,7 +30,7 @@ def test_add_and_get_master_subjects(mock_db_factory):
     initial_count = len(initial_subjects)
 
     # Act
-    master_service.add_master_subject("Quantum Physics")  # Use a unique name not in the seeder
+    master_service.create("Quantum Physics")  # Use a unique name not in the seeder
 
     # Assert
     all_subjects = master_service.get_all_master_subjects()
@@ -45,7 +45,7 @@ def test_add_and_get_subjects_for_cycle(mock_db_factory, setup_dependencies):
     master_service = SqliteMasterSubjectService(mock_db_factory)
     cycle_subject_service = SqliteCycleSubjectService(mock_db_factory)
     cycle_id = setup_dependencies["cycle_id"]
-    math_id = master_service.add_master_subject("Math")
+    math_id = master_service.create("Math")
 
     weights = {"relevance": 5, "volume": 4, "difficulty": 2, "is_active": True}
     calc = {"final_weight": 4.1, "num_blocks": 4}
@@ -60,7 +60,7 @@ def test_update_cycle_subject_difficulty(mock_db_factory, setup_dependencies):
     master_service = SqliteMasterSubjectService(mock_db_factory)
     cycle_subject_service = SqliteCycleSubjectService(mock_db_factory)
     cycle_id = setup_dependencies["cycle_id"]
-    master_id = master_service.add_master_subject("Science")
+    master_id = master_service.create("Science")
 
     cycle_subject_service.add_subject_to_cycle(cycle_id, master_id, {"relevance": 3, "volume": 3, "difficulty": 3, "is_active": True},
                                  {"final_weight": 3, "num_blocks": 3})
