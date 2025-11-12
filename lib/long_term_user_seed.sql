@@ -17,6 +17,20 @@ BEGIN TRANSACTION;
 -- ===================================================================================
 -- STEP 1: CLEANUP & USER SETUP
 -- ===================================================================================
+-- Delete existing data to ensure a clean slate.
+DELETE FROM exams;
+DELETE FROM subjects;
+DELETE FROM study_cycles;
+DELETE FROM cycle_subjects;
+DELETE FROM study_queue;
+DELETE FROM work_units;
+DELETE FROM study_sessions;
+DELETE FROM question_performance;
+DELETE FROM human_factors;
+
+-- Reset auto-increment counters.
+DELETE FROM sqlite_sequence WHERE name IN ('exams', 'subjects', 'study_cycles', 'cycle_subjects', 'study_sessions', 'users');
+
 -- Delete any user created during the initial app run to avoid conflicts.
 DELETE FROM users WHERE name != 'System';
 

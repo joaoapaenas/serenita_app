@@ -13,6 +13,11 @@ def seed_database_if_new(conn: sqlite3.Connection, base_path: str):
     Seeds the database with initial master data (subjects, templates) if the
     relevant tables are empty. This is typically called after the initial migration.
     """
+    seeding_flag_path = os.path.join(base_path, ".serenita_seeding_in_progress")
+    if os.path.exists(seeding_flag_path):
+        log.info("Seeding is temporarily disabled because another seeding process is in progress.")
+        return
+
     seed_file = get_seed_file_path(base_path)
     templates_file = get_templates_file_path(base_path)
     cursor = conn.cursor()
