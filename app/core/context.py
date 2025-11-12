@@ -1,12 +1,12 @@
 # app/core/context.py
 from dataclasses import dataclass
 
+from app.core.database import IDatabaseConnectionFactory
 from app.services.interfaces import (
     ICycleService, ISessionService, IExamService, IUserService, IPerformanceService,
     IAnalyticsService, IMasterSubjectService, ICycleSubjectService, IStudyQueueService,
     IWorkUnitService, ITemplateSubjectService
 )
-from app.core.database import SqliteConnectionFactory
 
 
 @dataclass
@@ -23,4 +23,4 @@ class AppContext:
     study_queue_service: IStudyQueueService
     work_unit_service: IWorkUnitService
     template_subject_service: ITemplateSubjectService
-    conn_factory: SqliteConnectionFactory
+    conn_factory: IDatabaseConnectionFactory

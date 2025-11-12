@@ -34,6 +34,39 @@ def mock_db_factory(mocker, db_connection):
     factory.get_connection.return_value = db_connection
     return factory
 
+@pytest.fixture(scope="session")
+def session_db_connection():
+    """
+    Creates and yields a single, schema-populated in-memory SQLite connection
+    for the duration of the test session. The connection is managed by the fixture.
+    """
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    run_migrations_on_connection(connection, BASE_PATH)
+    yield connection
+    connection.close()
+
+@pytest.fixture(scope="session")
+def session_mocker(session_db_connection): # session_db_connection is not used, but it ensures session scope
+    """
+    Provides a session-scoped mocker fixture.
+    """
+    from pytest_mock import MockerFixture
+    mocker = MockerFixture(session_db_connection) # Pass a dummy object for request
+    yield mocker
+    mocker.stopall()
+
+@pytest.fixture(scope="session")
+def session_mock_db_factory(session_mocker, session_db_connection):
+    """
+    Mocks the SqliteConnectionFactory to always return the single,
+    shared in-memory session_db_connection provided by the 'session_db_connection' fixture.
+    This forces all service calls within a single test to use the same open connection.
+    """
+    factory = session_mocker.MagicMock(spec=SqliteConnectionFactory)
+    factory.get_connection.return_value = session_db_connection
+    return factory
+
 @pytest.fixture
 def sample_user() -> User:
     return User(id=1, name="Test User", study_level="Intermediate", description=None, created_at="2023-01-01T00:00:00")
