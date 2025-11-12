@@ -18,8 +18,7 @@ class SqlitePerformanceService(IPerformanceService):
 
     def get_summary(self, cycle_id: int) -> List[SubjectPerformance]:
         log.debug(f"Getting performance summary for cycle_id: {cycle_id}")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             # This query has a bug, it relies on study_activities which is not being populated.
             # We will query question_performance directly for a more reliable result.
             rows = conn.execute(
@@ -48,13 +47,10 @@ class SqlitePerformanceService(IPerformanceService):
             ]
             log.debug(f"Found performance data for {len(summary_list)} subjects.")
             return summary_list
-        finally:
-            conn.close()
 
     def get_performance_over_time(self, user_id: int, subject_id: int | None = None) -> List[dict]:
         log.debug(f"Getting performance over time for user_id: {user_id}, subject_id: {subject_id}")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = """
                     SELECT strftime('%Y-%m-%d', SS.start_time) as date,
                            COUNT(QP.id)                        as total_questions,
@@ -77,13 +73,10 @@ class SqlitePerformanceService(IPerformanceService):
             rows = conn.execute(query, tuple(params)).fetchall()
 
             return [dict(row) for row in rows]
-        finally:
-            conn.close()
 
     def get_subjects_with_performance_data(self, user_id: int) -> List[dict]:
         log.debug(f"Getting subjects with performance data for user_id: {user_id}")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = """
                 SELECT DISTINCT
                     S.id,
@@ -97,13 +90,10 @@ class SqlitePerformanceService(IPerformanceService):
             """
             rows = conn.execute(query, (user_id,)).fetchall()
             return [{'id': row['id'], 'name': row['name']} for row in rows]
-        finally:
-            conn.close()
 
     def get_topic_performance(self, user_id: int, subject_id: int, days_ago: int | None = None) -> List[Dict[str, any]]:
         log.debug(f"Getting topic performance for user:{user_id}, subject:{subject_id}, last {days_ago} days.")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = """
                 SELECT
                     QP.topic_name,
@@ -133,13 +123,10 @@ class SqlitePerformanceService(IPerformanceService):
                 accuracy = (correct / total * 100) if total > 0 else 0
                 results.append({**dict(row), 'total_correct': correct, 'accuracy': accuracy})
             return results
-        finally:
-            conn.close()
 
     def get_work_unit_summary(self, user_id: int, subject_id: int | None = None) -> dict:
         log.debug(f"Getting work unit summary for user_id: {user_id}, subject_id: {subject_id}")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = "SELECT COUNT(id) AS total_units, SUM(is_completed) AS completed_units FROM work_units"
             params = []
 
@@ -154,13 +141,10 @@ class SqlitePerformanceService(IPerformanceService):
             if row:
                 return {'total_units': row['total_units'] or 0, 'completed_units': row['completed_units'] or 0}
             return {'total_units': 0, 'completed_units': 0}
-        finally:
-            conn.close()
 
     def get_study_time_summary(self, user_id: int, days_ago: int) -> dict[int, int]:
         log.debug(f"Getting study time summary for user {user_id} for the last {days_ago} days.")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             rows = conn.execute(
                 """
                 SELECT
@@ -177,13 +161,10 @@ class SqlitePerformanceService(IPerformanceService):
             ).fetchall()
 
             return {row['subject_id']: row['total_seconds'] for row in rows}
-        finally:
-            conn.close()
 
     def get_study_session_summary(self, user_id: int, days_ago: int | None = None) -> dict[int, int]:
         log.debug(f"Getting study session summary for user {user_id} for the last {days_ago} days.")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = """
                 SELECT
                     subject_id,
@@ -203,16 +184,13 @@ class SqlitePerformanceService(IPerformanceService):
 
             rows = conn.execute(query, tuple(params)).fetchall()
             return {row['subject_id']: row['session_count'] for row in rows}
-        finally:
-            conn.close()
 
     def get_subject_summary_for_analytics(self, user_id: int, cycle_id: int, days_ago: int | None = None) -> List[dict]:
         """
         Retrieves a comprehensive summary for each subject within a specific cycle.
         """
         log.debug(f"Getting comprehensive subject summary for user {user_id} and cycle {cycle_id}")
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             query = """
                 WITH TimeAndSessions AS (
                     SELECT
@@ -271,5 +249,3 @@ class SqlitePerformanceService(IPerformanceService):
                 results.append(data)
 
             return results
-        finally:
-            conn.close()

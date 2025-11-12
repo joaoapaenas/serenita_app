@@ -13,8 +13,8 @@ class SqliteTemplateSubjectService(ITemplateSubjectService):
         self._conn_factory = conn_factory
 
     def get_subjects_for_template(self, exam_id: int) -> List[dict]:
-        conn = self._conn_factory.get_connection()
-        rows = conn.execute(
-            "SELECT S.name, TS.relevance_weight, TS.volume_weight FROM template_subjects AS TS JOIN subjects AS S ON TS.subject_id = S.id WHERE TS.exam_id = ?",
-            (exam_id,)).fetchall()
-        return [dict(row) for row in rows]
+        with self._conn_factory.get_connection() as conn:
+            rows = conn.execute(
+                "SELECT S.name, TS.relevance_weight, TS.volume_weight FROM template_subjects AS TS JOIN subjects AS S ON TS.subject_id = S.id WHERE TS.exam_id = ?",
+                (exam_id,)).fetchall()
+            return [dict(row) for row in rows]

@@ -18,30 +18,27 @@ class SqliteSessionService(ISessionService):
         self._conn_factory = conn_factory
 
     def get_completed_session_count(self, cycle_id: int) -> int:
-        conn = self._conn_factory.get_connection()
-        try:
+        with self._conn_factory.get_connection() as conn:
             row = conn.execute(
                 "SELECT COUNT(id) FROM study_sessions WHERE cycle_id = ? AND end_time IS NOT NULL AND soft_delete = 0",
                 (cycle_id,)
             ).fetchone()
             return row[0] if row else 0
-        finally:
-            conn.close()
 
     def start_session(
             self, user_id: int, subject_id: int, cycle_id: int = None, topic_id: int = None
     ) -> int:
         log.info(f"Starting new study session for user_id: {user_id}, subject_id: {subject_id}")
         start_time = datetime.now(timezone.utc).isoformat()
-        conn = self._conn_factory.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO study_sessions (user_id, subject_id, cycle_id, topic_id, start_time) VALUES (?, ?, ?, ?, ?)",
-            (user_id, subject_id, cycle_id, topic_id, start_time),
-        )
-        new_id = cursor.lastrowid
-        conn.commit()
-        return new_id
+        with self._conn_factory.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO study_sessions (user_id, subject_id, cycle_id, topic_id, start_time) VALUES (?, ?, ?, ?, ?)",
+                (user_id, subject_id, cycle_id, topic_id, start_time),
+            )
+            new_id = cursor.lastrowid
+            conn.commit()
+            return new_id
 
     def finish_session(
             self, session_id: int, description: str = None, questions: List[QuestionPerformance] = None,
@@ -49,43 +46,43 @@ class SqliteSessionService(ISessionService):
     ):
         log.info(f"Finishing study session ID: {session_id}")
         end_time = datetime.now(timezone.utc).isoformat()
-        conn = self._conn_factory.get_connection()
-        try:
-            cursor = conn.cursor()
-            session_row = cursor.execute("SELECT start_time FROM study_sessions WHERE id = ?", (session_id,)).fetchone()
-            pause_row = cursor.execute(
-                "SELECT SUM(duration_sec) AS total_pauses FROM session_pauses WHERE session_id = ?",
-                (session_id,)).fetchone()
+        with self._conn_factory.get_connection() as conn:
+            try:
+                cursor = conn.cursor()
+                session_row = cursor.execute("SELECT start_time FROM study_sessions WHERE id = ?", (session_id,)).fetchone()
+                pause_row = cursor.execute(
+                    "SELECT SUM(duration_sec) AS total_pauses FROM session_pauses WHERE session_id = ?",
+                    (session_id,)).fetchone()
 
-            total_pause_sec = (pause_row["total_pauses"] if pause_row and pause_row["total_pauses"] else 0)
-            start_time_obj = datetime.fromisoformat(session_row["start_time"])
-            end_time_obj = datetime.fromisoformat(end_time)
-            total_duration_sec = int((end_time_obj - start_time_obj).total_seconds())
-            liquid_duration_sec = total_duration_sec - total_pause_sec
+                total_pause_sec = (pause_row["total_pauses"] if pause_row and pause_row["total_pauses"] else 0)
+                start_time_obj = datetime.fromisoformat(session_row["start_time"])
+                end_time_obj = datetime.fromisoformat(end_time)
+                total_duration_sec = int((end_time_obj - start_time_obj).total_seconds())
+                liquid_duration_sec = total_duration_sec - total_pause_sec
 
-            cursor.execute(
-                """UPDATE study_sessions
-                   SET end_time                 = ?,
-                       description              = ?,
-                       total_duration_sec       = ?,
-                       total_pause_duration_sec = ?,
-                       liquid_duration_sec      = ?,
-                       topic_id                 = ?
-                   WHERE id = ?""",
-                (end_time, description, total_duration_sec, total_pause_sec, liquid_duration_sec, topic_id, session_id),
-            )
+                cursor.execute(
+                    """UPDATE study_sessions
+                       SET end_time                 = ?,
+                           description              = ?,
+                           total_duration_sec       = ?,
+                           total_pause_duration_sec = ?,
+                           liquid_duration_sec      = ?,
+                           topic_id                 = ?
+                       WHERE id = ?""",
+                    (end_time, description, total_duration_sec, total_pause_sec, liquid_duration_sec, topic_id, session_id),
+                )
 
-            if questions:
-                question_data_tuples = [(session_id, q.topic_name, q.difficulty_level, 1 if q.is_correct else 0) for q
-                                        in questions]
-                cursor.executemany(
-                    "INSERT INTO question_performance (session_id, topic_name, difficulty_level, is_correct) VALUES (?, ?, ?, ?)",
-                    question_data_tuples)
+                if questions:
+                    question_data_tuples = [(session_id, q.topic_name, q.difficulty_level, 1 if q.is_correct else 0) for q
+                                            in questions]
+                    cursor.executemany(
+                        "INSERT INTO question_performance (session_id, topic_name, difficulty_level, is_correct) VALUES (?, ?, ?, ?)",
+                        question_data_tuples)
 
-            conn.commit()
-        except conn.Error as e:
-            log.error(f"Database error during finish_session for session_id {session_id}: {e}", exc_info=True)
-            conn.rollback()
+                conn.commit()
+            except conn.Error as e:
+                log.error(f"Database error during finish_session for session_id {session_id}: {e}", exc_info=True)
+                conn.rollback()
 
     def log_manual_session(self, user_id: int, cycle_id: int, subject_id: int, topic_id: Optional[int],
                            start_datetime_iso: str,
@@ -96,85 +93,85 @@ class SqliteSessionService(ISessionService):
         duration_sec = duration_minutes * 60
         end_time_obj = start_time_obj + timedelta(seconds=duration_sec)
 
-        conn = self._conn_factory.get_connection()
-        try:
-            cursor = conn.cursor()
-            cursor.execute(
-                """
-                INSERT INTO study_sessions
-                (user_id, cycle_id, subject_id, topic_id, start_time, end_time,
-                 total_duration_sec, liquid_duration_sec, description,
-                 total_questions_done, total_questions_correct)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (user_id, cycle_id, subject_id, topic_id, start_time_obj.isoformat(), end_time_obj.isoformat(),
-                 duration_sec, duration_sec, description,
-                 total_questions_done, total_questions_correct)
-            )
-            new_id = cursor.lastrowid
+        with self._conn_factory.get_connection() as conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute(
+                    """
+                    INSERT INTO study_sessions
+                    (user_id, cycle_id, subject_id, topic_id, start_time, end_time,
+                     total_duration_sec, liquid_duration_sec, description,
+                     total_questions_done, total_questions_correct)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (user_id, cycle_id, subject_id, topic_id, start_time_obj.isoformat(), end_time_obj.isoformat(),
+                     duration_sec, duration_sec, description,
+                     total_questions_done, total_questions_correct)
+                )
+                new_id = cursor.lastrowid
 
-            conn.commit()
-            return new_id
-        except conn.Error as e:
-            log.error(f"Database error during log_manual_session: {e}", exc_info=True)
-            conn.rollback()
-            raise
+                conn.commit()
+                return new_id
+            except conn.Error as e:
+                log.error(f"Database error during log_manual_session: {e}", exc_info=True)
+                conn.rollback()
+                raise
 
 
     def add_pause_start(self, session_id: int) -> int:
         log.info(f"Pausing session ID: {session_id}")
         pause_time = datetime.now(timezone.utc).isoformat()
-        conn = self._conn_factory.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO session_pauses (session_id, pause_time) VALUES (?, ?)", (session_id, pause_time))
-        new_id = cursor.lastrowid
-        conn.commit()
-        return new_id
+        with self._conn_factory.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO session_pauses (session_id, pause_time) VALUES (?, ?)", (session_id, pause_time))
+            new_id = cursor.lastrowid
+            conn.commit()
+            return new_id
 
     def add_pause_end(self, session_id: int):
         log.info(f"Resuming session ID: {session_id}")
         resume_time = datetime.now(timezone.utc).isoformat()
-        conn = self._conn_factory.get_connection()
-        last_pause = conn.execute(
-            "SELECT id, pause_time FROM session_pauses WHERE session_id = ? AND resume_time IS NULL ORDER BY id DESC LIMIT 1",
-            (session_id,)).fetchone()
-        if last_pause:
-            pause_id = last_pause["id"]
-            pause_time_obj = datetime.fromisoformat(last_pause["pause_time"])
-            resume_time_obj = datetime.fromisoformat(resume_time)
-            duration_sec = int((resume_time_obj - pause_time_obj).total_seconds())
-            conn.execute("UPDATE session_pauses SET resume_time = ?, duration_sec = ? WHERE id = ?",
-                         (resume_time, duration_sec, pause_id))
-            conn.commit()
+        with self._conn_factory.get_connection() as conn:
+            last_pause = conn.execute(
+                "SELECT id, pause_time FROM session_pauses WHERE session_id = ? AND resume_time IS NULL ORDER BY id DESC LIMIT 1",
+                (session_id,)).fetchone()
+            if last_pause:
+                pause_id = last_pause["id"]
+                pause_time_obj = datetime.fromisoformat(last_pause["pause_time"])
+                resume_time_obj = datetime.fromisoformat(resume_time)
+                duration_sec = int((resume_time_obj - pause_time_obj).total_seconds())
+                conn.execute("UPDATE session_pauses SET resume_time = ?, duration_sec = ? WHERE id = ?",
+                             (resume_time, duration_sec, pause_id))
+                conn.commit()
 
     def log_activity_and_create_reviews(self, session_id: int, topic_id: int | None, activity_type: str,
                                         duration_sec: int, perf_data: dict):
         pass  # Not critical for tests
 
     def get_history_for_cycle(self, cycle_id: int) -> List[StudySession]:
-        conn = self._conn_factory.get_connection()
-        session_rows = conn.execute(
-            """
-            SELECT ss.*, s.name as subject_name
-            FROM study_sessions as ss
-            JOIN subjects as s ON ss.subject_id = s.id
-            WHERE ss.cycle_id = ? AND ss.soft_delete = 0
-            """, (cycle_id,)
-        ).fetchall()
+        with self._conn_factory.get_connection() as conn:
+            session_rows = conn.execute(
+                """
+                SELECT ss.*, s.name as subject_name
+                FROM study_sessions as ss
+                JOIN subjects as s ON ss.subject_id = s.id
+                WHERE ss.cycle_id = ? AND ss.soft_delete = 0
+                """, (cycle_id,)
+            ).fetchall()
 
-        question_rows = conn.execute(
-            "SELECT qp.* FROM question_performance AS qp JOIN study_sessions AS ss ON qp.session_id = ss.id WHERE ss.cycle_id = ?",
-            (cycle_id,)).fetchall()
-        questions_by_session = {}
-        for q_row in question_rows:
-            session_id = q_row['session_id']
-            if session_id not in questions_by_session:
-                questions_by_session[session_id] = []
-            questions_by_session[session_id].append(QuestionPerformance(**dict(q_row)))
-        sessions_with_questions = []
-        for session_row in session_rows:
-            session_dict = dict(session_row)
-            session_id = session_dict['id']
-            session_dict['questions'] = questions_by_session.get(session_id, [])
-            sessions_with_questions.append(StudySession(**session_dict))
-        return sessions_with_questions
+            question_rows = conn.execute(
+                "SELECT qp.* FROM question_performance AS qp JOIN study_sessions AS ss ON qp.session_id = ss.id WHERE ss.cycle_id = ?",
+                (cycle_id,)).fetchall()
+            questions_by_session = {}
+            for q_row in question_rows:
+                session_id = q_row['session_id']
+                if session_id not in questions_by_session:
+                    questions_by_session[session_id] = []
+                questions_by_session[session_id].append(QuestionPerformance(**dict(q_row)))
+            sessions_with_questions = []
+            for session_row in session_rows:
+                session_dict = dict(session_row)
+                session_id = session_dict['id']
+                session_dict['questions'] = questions_by_session.get(session_id, [])
+                sessions_with_questions.append(StudySession(**session_dict))
+            return sessions_with_questions
