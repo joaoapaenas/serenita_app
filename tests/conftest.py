@@ -8,6 +8,9 @@ from app.models.user import User
 from app.models.cycle import Cycle
 from app.models.subject import CycleSubject
 from app.core.simulation.seeder import seed_profile
+from app.services.user_service import SqliteUserService # Added import
+
+import uuid # Added import
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -66,6 +69,17 @@ def session_mock_db_factory(session_mocker, session_db_connection):
     factory = session_mocker.MagicMock(spec=SqliteConnectionFactory)
     factory.get_connection.return_value = session_db_connection
     return factory
+
+@pytest.fixture(scope="session")
+def seeded_user_session(session_mock_db_factory):
+    """
+    Creates a user in the session-scoped database and returns the user service
+    and the created user object.
+    """
+    user_service = SqliteUserService(session_mock_db_factory)
+    unique_user_name = f"Existing User {uuid.uuid4()}"
+    user = user_service.create_user(unique_user_name, "Intermediate")
+    return user_service, user
 
 @pytest.fixture
 def sample_user() -> User:

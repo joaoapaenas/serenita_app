@@ -64,6 +64,13 @@ class WelcomeView(QDialog):
         self.name_input.textChanged.connect(lambda text: self.start_button.setEnabled(bool(text.strip())))
         self.start_button.clicked.connect(self._on_start)
 
+    def set_user_data(self, name: str, study_level: str):
+        """Populates the view's fields with existing user data."""
+        self.name_input.setText(name)
+        self.experience_combo.setCurrentText(study_level)
+        self.start_button.setText("Continue") # Change button text for existing user
+        self.start_button.setEnabled(True) # Enable button as data is pre-filled
+
     def _on_start(self):
         """Emits the collected user data when the start button is clicked."""
         name = self.name_input.text().strip()

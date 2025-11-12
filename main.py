@@ -121,11 +121,16 @@ def main():
         apply_theme(app, "Dark")
         welcome_view = WelcomeView()
         welcome_controller = WelcomeController(view=welcome_view, user_service=app_context.user_service)
-        welcome_controller.run()
-        user = app_context.user_service.get_first_user()
-        if not user:
-            log.critical("User setup was cancelled or failed. Application cannot start.")
-            sys.exit(0)
+        
+        # Check if an existing user is found by the controller
+        user = welcome_controller.run() 
+        
+        if not user: # If no user was found by the controller, show the dialog for creation
+            welcome_view.exec()
+            user = app_context.user_service.get_first_user() # Get the newly created user
+            if not user:
+                log.critical("User setup was cancelled or failed. Application cannot start.")
+                sys.exit(0)
 
     apply_theme(app, user.theme)
     log.info(f"Application context initialized for user: '{user.name}' (ID: {user.id})")

@@ -16,15 +16,32 @@ class WelcomeController:
     def __init__(self, view: WelcomeView, user_service: IUserService):
         self._view = view
         self.user_service = user_service
-        self._view.start_requested.connect(self.create_user)
+        self._view.start_requested.connect(self._on_start_requested) # Connect to new handler
 
     def run(self):
         """
-        Shows the welcome dialog and blocks execution until the user completes
-        the setup or closes the window.
+        Checks for an existing user and populates the view if found.
+        Returns the existing user if found, otherwise None.
         """
         log.info("Running first-time user setup.")
-        self._view.exec()
+        existing_user = self.user_service.get_first_user()
+        if existing_user:
+            log.info(f"Existing user '{existing_user.name}' found. Populating welcome screen.")
+            self._view.set_user_data(existing_user.name, existing_user.study_level)
+            return existing_user
+        return None
+
+    def _on_start_requested(self, name: str, study_level: str):
+        """
+        Handles the start_requested signal, either creating a new user or
+        accepting the dialog for an existing user.
+        """
+        existing_user = self.user_service.get_first_user()
+        if existing_user:
+            log.info(f"Existing user '{existing_user.name}' confirmed. Accepting welcome screen.")
+            self._view.accept()
+        else:
+            self.create_user(name, study_level)
 
     def create_user(self, name: str, study_level: str):
         """
