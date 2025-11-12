@@ -3,14 +3,13 @@
 import logging
 from typing import Optional, Dict, Any
 
-from PySide6.QtCore import QObject, QThreadPool, Qt
+from PySide6.QtCore import QObject, QThreadPool
 from PySide6.QtGui import QUndoStack
-from PySide6.QtWidgets import QWidget, QMessageBox, QLabel, QPushButton
+from PySide6.QtWidgets import QWidget, QMessageBox
 
 from app.core import business_logic
 from app.core.context import AppContext
 from app.core.signals import app_signals
-from app.common.widgets.empty_state_widget import EmptyStateWidget
 from app.features.rebalancer.rebalance_controller import RebalanceController
 from app.navigation_service import NavigationService
 from app.features.configurations.configurations_landing_view import ConfigurationsLandingView

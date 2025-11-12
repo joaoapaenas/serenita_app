@@ -43,15 +43,9 @@ class DeveloperToolsController:
         if reply != QMessageBox.StandardButton.Yes:
             return
 
-        base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-        seeding_flag_path = os.path.join(base_path, ".serenita_seeding_in_progress")
-
         try:
-            # Create the flag file
-            with open(seeding_flag_path, "w") as f:
-                f.write("1")
-
             # Assuming the script is in 'lib/long_term_user_seed.sql' relative to the project root
+            base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             script_path = os.path.join(base_path, "lib", "long_term_user_seed.sql")
 
             if not os.path.exists(script_path):
@@ -72,7 +66,3 @@ class DeveloperToolsController:
         except Exception as e:
             log.error("Failed to execute seed script", exc_info=True)
             show_error_message(self._dialog, "Error", "Failed to execute the seed script.", str(e))
-        finally:
-            # Ensure the flag file is removed
-            if os.path.exists(seeding_flag_path):
-                os.remove(seeding_flag_path)

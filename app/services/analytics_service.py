@@ -22,53 +22,54 @@ class SqliteAnalyticsService(IAnalyticsService):
 
     def get_daily_performance(self, cycle_id: int, days_ago: Optional[int] = None) -> List[DailyPerformance]:
         """Gets the total questions and correct answers grouped by day, with an optional date range."""
-        with self._conn_factory.get_connection() as conn:
-            is_sqlalchemy_conn = isinstance(conn, Connection)
+        conn = self._conn_factory.get_connection()
+        
+        is_sqlalchemy_conn = isinstance(conn, Connection)
 
-            if is_sqlalchemy_conn:
-                query_parts = ["""SELECT
+        if is_sqlalchemy_conn:
+            query_parts = ["""SELECT
+                DATE(SS.start_time) as session_date,
+                SUM(QP.is_correct) as total_correct,
+                COUNT(QP.id) as total_questions
+            FROM question_performance AS QP
+            JOIN study_sessions AS SS ON QP.session_id = SS.id
+            WHERE SS.cycle_id = :cycle_id"""]
+            params = {"cycle_id": cycle_id}
+
+            if days_ago is not None:
+                query_parts.append(" AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')")
+                params["days_ago"] = days_ago
+            
+            query_parts.append(""" GROUP BY session_date
+                ORDER BY session_date ASC;""")
+            
+            query = "".join(query_parts)
+            rows = conn.execute(text(query), params).mappings().fetchall()
+        else: # Assume sqlite3.Connection
+            query = """
+                SELECT
                     DATE(SS.start_time) as session_date,
                     SUM(QP.is_correct) as total_correct,
                     COUNT(QP.id) as total_questions
                 FROM question_performance AS QP
                 JOIN study_sessions AS SS ON QP.session_id = SS.id
-                WHERE SS.cycle_id = :cycle_id"""]
-                params = {"cycle_id": cycle_id}
+                WHERE SS.cycle_id = ?
+            """
+            params = [cycle_id]
 
-                if days_ago is not None:
-                    query_parts.append(" AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')")
-                    params["days_ago"] = days_ago
-                
-                query_parts.append(""" GROUP BY session_date
-                    ORDER BY session_date ASC;""")
-                
-                query = "".join(query_parts)
-                rows = conn.execute(text(query), params).mappings().fetchall()
-            else: # Assume sqlite3.Connection
-                query = """
-                    SELECT
-                        DATE(SS.start_time) as session_date,
-                        SUM(QP.is_correct) as total_correct,
-                        COUNT(QP.id) as total_questions
-                    FROM question_performance AS QP
-                    JOIN study_sessions AS SS ON QP.session_id = SS.id
-                    WHERE SS.cycle_id = ?
-                """
-                params = [cycle_id]
+            if days_ago is not None:
+                query += " AND DATE(SS.start_time) >= date('now', '-' || ? || ' days')"
+                params.append(days_ago)
+            query += " GROUP BY session_date ORDER BY session_date ASC;"
+            rows = conn.execute(query, tuple(params)).fetchall()
 
-                if days_ago is not None:
-                    query += " AND DATE(SS.start_time) >= date('now', '-' || ? || ' days')"
-                    params.append(days_ago)
-                query += " GROUP BY session_date ORDER BY session_date ASC;"
-                rows = conn.execute(query, tuple(params)).fetchall()
-
-            return [
-                DailyPerformance(
-                    date=row['session_date'],
-                    questions_done=row['total_questions'],
-                    questions_correct=row['total_correct']
-                ) for row in rows
-            ]
+        return [
+            DailyPerformance(
+                date=row['session_date'],
+                questions_done=row['total_questions'],
+                questions_correct=row['total_correct']
+            ) for row in rows
+        ]
 
     def get_weekly_summary(self, cycle_id: int, days_ago: Optional[int] = None) -> List[WeeklyPerformance]:
         """Gets performance aggregated by week."""
