@@ -45,7 +45,7 @@ class DeveloperToolsController:
 
         try:
             # Assuming the script is in 'lib/long_term_user_seed.sql' relative to the project root
-            base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
             script_path = os.path.join(base_path, "lib", "long_term_user_seed.sql")
 
             if not os.path.exists(script_path):
