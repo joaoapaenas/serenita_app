@@ -5,27 +5,24 @@ from typing import List, Optional
 
 from app.core.database import IDatabaseConnectionFactory
 from app.models.subject import CycleSubject
+from app.services import BaseService
 from app.services.interfaces import IStudyQueueService
 
 log = logging.getLogger(__name__)
 
 
-class SqliteStudyQueueService(IStudyQueueService):
+class SqliteStudyQueueService(BaseService, IStudyQueueService):
     def __init__(self, conn_factory: IDatabaseConnectionFactory):
-        self._conn_factory = conn_factory
+        super().__init__(conn_factory)
 
     def save_queue(self, cycle_id: int, queue: List[int]):
-        conn = self._conn_factory.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM study_queue WHERE cycle_id = ?", (cycle_id,))
+        self._execute_query("DELETE FROM study_queue WHERE cycle_id = ?", (cycle_id,))
         queue_data = [(cycle_id, cycle_subject_id, order) for order, cycle_subject_id in enumerate(queue)]
-        cursor.executemany("INSERT INTO study_queue (cycle_id, cycle_subject_id, queue_order) VALUES (?, ?, ?)",
+        self._execute_query("INSERT INTO study_queue (cycle_id, cycle_subject_id, queue_order) VALUES (?, ?, ?)",
                          queue_data)
-        conn.commit()
 
     def get_next_in_queue(self, cycle_id: int, position: int) -> Optional[CycleSubject]:
-        conn = self._conn_factory.get_connection()
-        row = conn.execute(
+        row = self._execute_query(
             "SELECT CS.*, S.name, S.color FROM study_queue AS Q JOIN cycle_subjects AS CS ON Q.cycle_subject_id = CS.id JOIN subjects AS S ON CS.subject_id = S.id WHERE Q.cycle_id = ? AND Q.queue_order = ?",
             (cycle_id, position)).fetchone()
         if not row: return None
