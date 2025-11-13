@@ -3,18 +3,18 @@ import logging
 from typing import List
 
 from app.core.database import IDatabaseConnectionFactory
-from app.services import BaseService
 from app.services.interfaces import ITemplateSubjectService
 
 log = logging.getLogger(__name__)
 
 
-class SqliteTemplateSubjectService(BaseService, ITemplateSubjectService):
+class SqliteTemplateSubjectService(ITemplateSubjectService):
     def __init__(self, conn_factory: IDatabaseConnectionFactory):
-        super().__init__(conn_factory)
+        self._conn_factory = conn_factory
 
     def get_subjects_for_template(self, exam_id: int) -> List[dict]:
-        rows = self._execute_query(
+        conn = self._conn_factory.get_connection()
+        rows = conn.execute(
             "SELECT S.name, TS.relevance_weight, TS.volume_weight FROM template_subjects AS TS JOIN subjects AS S ON TS.subject_id = S.id WHERE TS.exam_id = ?",
             (exam_id,)).fetchall()
         return [dict(row) for row in rows]

@@ -5,26 +5,28 @@ from typing import List, Optional
 
 from app.core.database import IDatabaseConnectionFactory
 from app.models.subject import CycleSubject
-from app.services import BaseService
 from app.services.interfaces import ICycleSubjectService
 
 log = logging.getLogger(__name__)
 
 
-class SqliteCycleSubjectService(BaseService, ICycleSubjectService):
+class SqliteCycleSubjectService(ICycleSubjectService):
     def __init__(self, conn_factory: IDatabaseConnectionFactory):
-        super().__init__(conn_factory)
+        self._conn_factory = conn_factory
 
     def add_subject_to_cycle(self, cycle_id: int, subject_id: int, weights: dict, calculated_data: dict):
+        conn = self._conn_factory.get_connection()
         from datetime import date
         today_str = date.today().isoformat()
-        self._execute_query(
+        conn.execute(
             "INSERT INTO cycle_subjects (cycle_id, subject_id, relevance_weight, volume_weight, difficulty_weight, is_active, final_weight_calc, num_blocks_in_cycle, date_added) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (cycle_id, subject_id, weights["relevance"], weights["volume"], weights["difficulty"], weights["is_active"],
              calculated_data["final_weight"], calculated_data["num_blocks"], today_str))
+        conn.commit()
 
     def get_subjects_for_cycle(self, cycle_id: int) -> List[CycleSubject]:
-        rows = self._execute_query(
+        conn = self._conn_factory.get_connection()
+        rows = conn.execute(
             "SELECT CS.id, CS.cycle_id, CS.subject_id, CS.relevance_weight, CS.volume_weight, CS.difficulty_weight, CS.is_active, CS.final_weight_calc, CS.num_blocks_in_cycle, CS.date_added, CS.current_strategic_state, CS.state_hysteresis_data, S.name, S.color FROM cycle_subjects AS CS JOIN subjects AS S ON CS.subject_id = S.id WHERE CS.cycle_id = ?",
             (cycle_id,)).fetchall()
         cycle_subjects = []
@@ -52,7 +54,8 @@ class SqliteCycleSubjectService(BaseService, ICycleSubjectService):
         return cycle_subjects
 
     def get_cycle_subject(self, cycle_subject_id: int) -> Optional[CycleSubject]:
-        row = self._execute_query(
+        conn = self._conn_factory.get_connection()
+        row = conn.execute(
             "SELECT CS.id, CS.cycle_id, CS.subject_id, CS.relevance_weight, CS.volume_weight, CS.difficulty_weight, CS.is_active, CS.final_weight_calc, CS.num_blocks_in_cycle, CS.date_added, CS.current_strategic_state, CS.state_hysteresis_data, S.name, S.color FROM cycle_subjects AS CS JOIN subjects AS S ON CS.subject_id = S.id WHERE CS.id = ?",
             (cycle_subject_id,)).fetchone()
         if not row: return None
@@ -78,16 +81,24 @@ class SqliteCycleSubjectService(BaseService, ICycleSubjectService):
         )
 
     def delete_subjects_for_cycle(self, cycle_id: int):
-        self._execute_query("DELETE FROM cycle_subjects WHERE cycle_id = ?", (cycle_id,))
+        conn = self._conn_factory.get_connection()
+        conn.execute("DELETE FROM cycle_subjects WHERE cycle_id = ?", (cycle_id,))
+        conn.commit()
 
     def update_cycle_subject_difficulty(self, cycle_subject_id: int, new_difficulty: int):
-        self._execute_query("UPDATE cycle_subjects SET difficulty_weight = ? WHERE id = ?", (new_difficulty, cycle_subject_id))
+        conn = self._conn_factory.get_connection()
+        conn.execute("UPDATE cycle_subjects SET difficulty_weight = ? WHERE id = ?", (new_difficulty, cycle_subject_id))
+        conn.commit()
 
     def update_cycle_subject_calculated_fields(self, cycle_subject_id: int, final_weight: float, num_blocks: int):
-        self._execute_query("UPDATE cycle_subjects SET final_weight_calc = ?, num_blocks_in_cycle = ? WHERE id = ?",
+        conn = self._conn_factory.get_connection()
+        conn.execute("UPDATE cycle_subjects SET final_weight_calc = ?, num_blocks_in_cycle = ? WHERE id = ?",
                      (final_weight, num_blocks, cycle_subject_id))
+        conn.commit()
 
     def update_cycle_subject_state(self, cycle_subject_id: int, state: str, hysteresis_data: dict):
+        conn = self._conn_factory.get_connection()
         hysteresis_data_str = json.dumps(hysteresis_data)
-        self._execute_query("UPDATE cycle_subjects SET current_strategic_state = ?, state_hysteresis_data = ? WHERE id = ?",
+        conn.execute("UPDATE cycle_subjects SET current_strategic_state = ?, state_hysteresis_data = ? WHERE id = ?",
                      (state, hysteresis_data_str, cycle_subject_id))
+        conn.commit()

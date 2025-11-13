@@ -1,37 +1,67 @@
+import logging
+import sqlite3
+from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import List, Optional
+
+from sqlalchemy import text
+from sqlalchemy.engine import Connection
 
 from app.core.database import IDatabaseConnectionFactory
 from app.models.cycle import Cycle
-from app.services import BaseService
 from app.services.interfaces import IAnalyticsService, DailyPerformance, WeeklyPerformance
 
 log = logging.getLogger(__name__)
 
 
-class SqliteAnalyticsService(BaseService, IAnalyticsService):
+class SqliteAnalyticsService(IAnalyticsService):
     """Concrete implementation for time-series performance analytics."""
 
     def __init__(self, conn_factory: IDatabaseConnectionFactory):
-        super().__init__(conn_factory)
+        self._conn_factory = conn_factory
 
     def get_daily_performance(self, cycle_id: int, days_ago: Optional[int] = None) -> List[DailyPerformance]:
         """Gets the total questions and correct answers grouped by day, with an optional date range."""
-        query = """
-            SELECT
+        conn = self._conn_factory.get_connection()
+        
+        is_sqlalchemy_conn = isinstance(conn, Connection)
+
+        if is_sqlalchemy_conn:
+            query_parts = ["""SELECT
                 DATE(SS.start_time) as session_date,
                 SUM(QP.is_correct) as total_correct,
                 COUNT(QP.id) as total_questions
             FROM question_performance AS QP
             JOIN study_sessions AS SS ON QP.session_id = SS.id
-            WHERE SS.cycle_id = ?
-        """
-        params = [cycle_id]
+            WHERE SS.cycle_id = :cycle_id"""]
+            params = {"cycle_id": cycle_id}
 
-        if days_ago is not None:
-            query += " AND DATE(SS.start_time) >= date('now', '-' || ? || ' days')"
-            params.append(days_ago)
-        query += " GROUP BY session_date ORDER BY session_date ASC;"
-        rows = self._execute_query(query, tuple(params)).fetchall()
+            if days_ago is not None:
+                query_parts.append(" AND DATE(SS.start_time) >= date('now', '-' || :days_ago || ' days')")
+                params["days_ago"] = days_ago
+            
+            query_parts.append(""" GROUP BY session_date
+                ORDER BY session_date ASC;""")
+            
+            query = "".join(query_parts)
+            rows = conn.execute(text(query), params).mappings().fetchall()
+        else: # Assume sqlite3.Connection
+            query = """
+                SELECT
+                    DATE(SS.start_time) as session_date,
+                    SUM(QP.is_correct) as total_correct,
+                    COUNT(QP.id) as total_questions
+                FROM question_performance AS QP
+                JOIN study_sessions AS SS ON QP.session_id = SS.id
+                WHERE SS.cycle_id = ?
+            """
+            params = [cycle_id]
+
+            if days_ago is not None:
+                query += " AND DATE(SS.start_time) >= date('now', '-' || ? || ' days')"
+                params.append(days_ago)
+            query += " GROUP BY session_date ORDER BY session_date ASC;"
+            rows = conn.execute(query, tuple(params)).fetchall()
 
         return [
             DailyPerformance(
