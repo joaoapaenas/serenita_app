@@ -1,4 +1,4 @@
-# app/commom/subject_editor/subject_editor_controller.py
+# app/common/subject_editor/subject_editor_controller.py
 
 import logging
 
@@ -13,10 +13,10 @@ log = logging.getLogger(__name__)
 class SubjectEditorController(QObject):
     subject_saved = Signal(dict)
 
-    def __init__(self, parent_view=None):
+    def __init__(self, view: SubjectEditorView):
         super().__init__()
         log.debug("Initializing SubjectEditorController.")
-        self._view = SubjectEditorView(parent=parent_view)
+        self._view = view
         # Connect to the view's raw save signal
         self._view.subject_saved.connect(self._validate_and_relay_save)
         self._view.rejected.connect(self.close)  # Handle user closing the dialog
@@ -31,8 +31,10 @@ class SubjectEditorController(QObject):
         relays the 'subject_saved' signal or handles the error.
         """
         log.debug(f"Validating subject data: {data}")
-        if not data['name']:
-            QMessageBox.warning(self._view, "Validation Error", "Subject name cannot be empty.")
+        if not data["name"]:
+            QMessageBox.warning(
+                self._view, "Validation Error", "Subject name cannot be empty."
+            )
             # Don't close the dialog, let the user fix it.
             return
 

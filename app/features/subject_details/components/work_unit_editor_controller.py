@@ -1,54 +1,49 @@
-# app/features/subject_details/components/work_unit_editor_controller.py
+# app/common/subject_editor/subject_editor_controller.py
 
 import logging
 
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QMessageBox
 
-from app.models.subject import WorkUnit
-from app.services.interfaces import IWorkUnitService
-from .work_unit_editor_view import WorkUnitEditorView
+from app.common.subject_editor.subject_editor_view import SubjectEditorView
 
 log = logging.getLogger(__name__)
 
 
-class WorkUnitEditorController(QObject):
-    """Controller for the Work Unit editor dialog."""
-    work_unit_saved = Signal()
+class SubjectEditorController(QObject):
+    subject_saved = Signal(dict)
 
-    def __init__(self, view: WorkUnitEditorView, subject_id: int, work_unit_service: IWorkUnitService,
-                 work_unit_to_edit: WorkUnit | None = None):
-        super().__init__(view)
-        self.subject_id = subject_id
-        self.work_unit_service = work_unit_service
-        self.work_unit_to_edit = work_unit_to_edit
-
+    def __init__(self, view: SubjectEditorView):
+        super().__init__()
+        log.debug("Initializing SubjectEditorController.")
         self._view = view
-        self._view.save_requested.connect(self._on_save_requested)
-
-        if self.work_unit_to_edit:
-            self._view.set_data(self.work_unit_to_edit)
+        # Connect to the view's raw save signal
+        self._view.subject_saved.connect(self._validate_and_relay_save)
+        self._view.rejected.connect(self.close)  # Handle user closing the dialog
 
     def show(self):
-        """Shows the dialog to the user."""
+        log.debug("Showing subject editor dialog.")
         self._view.exec()
 
-    def _on_save_requested(self, data: dict):
-        """Validates data and calls the appropriate service method."""
-        if not data['title']:
-            QMessageBox.warning(self._view, "Input Error", "The Work Unit title cannot be empty.")
+    def _validate_and_relay_save(self, data: dict):
+        """
+        Receives raw data from the view, validates it, and then either
+        relays the 'subject_saved' signal or handles the error.
+        """
+        log.debug(f"Validating subject data: {data}")
+        if not data["name"]:
+            QMessageBox.warning(
+                self._view, "Validation Error", "Subject name cannot be empty."
+            )
+            # Don't close the dialog, let the user fix it.
             return
 
-        if self.work_unit_to_edit:
-            # --- Edit Mode ---
-            success = self.work_unit_service.update_work_unit(self.work_unit_to_edit.id, data)
-        else:
-            # --- Create Mode ---
-            new_unit = self.work_unit_service.add_work_unit(self.subject_id, data)
-            success = new_unit is not None
+        # Validation passed, emit the approved data.
+        log.info(f"Subject '{data['name']}' validation passed. Relaying signal.")
+        self.subject_saved.emit(data)
+        # Now we can close the dialog.
+        self._view.accept()
 
-        if success:
-            self.work_unit_saved.emit()
-            self._view.accept()
-        else:
-            QMessageBox.critical(self._view, "Database Error", "Could not save the Work Unit. Please check the logs.")
+    def close(self):
+        log.debug("Closing subject editor dialog.")
+        self._view.close()
