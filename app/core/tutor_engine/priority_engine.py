@@ -4,6 +4,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Tuple, Dict, Any, Optional
 
+from app.core.config_service import ConfigService
 from app.models.subject import CycleSubject
 from .priority_strategies import (
     DiscoveryPriorityStrategy,
@@ -21,14 +22,12 @@ class PriorityEngine:
     Calculates a subject's final_priority score by determining a base_priority
     and passing it through a pipeline of tactical modifiers. (v20 spec Batch 4)
     """
-    MAX_DISCOVERY_BOOSTS_PER_CYCLE = 2
-    ROI_TIME_THRESHOLD_HR = 20
-    ROI_VELOCITY_THRESHOLD = 0.01
-    ROI_POINT_VALUE_THRESHOLD = 3
 
-    def __init__(self, cognitive_capacity_multiplier: float, all_discovery_subjects: list):
+    # TODO: Update call sites to pass ConfigService
+    def __init__(self, cognitive_capacity_multiplier: float, all_discovery_subjects: list, config_service: ConfigService):
         self.cognitive_multiplier = cognitive_capacity_multiplier
         self.reasoning_flags = {}
+        self.config = config_service
         self._setup_discovery_boost(all_discovery_subjects)
         self._priority_strategies = {
             'DISCOVERY': DiscoveryPriorityStrategy(),
@@ -45,7 +44,7 @@ class PriorityEngine:
             key=lambda s: (s.date_added or '9999-99-99', -s.relevance_weight)
         )
         self.boosted_subject_ids = {
-            s.id for s in sorted_discovery[:self.MAX_DISCOVERY_BOOSTS_PER_CYCLE]
+            s.id for s in sorted_discovery[:self.config.get("priority_engine.max_discovery_boosts_per_cycle")]
         }
         log.debug(f"Subjects receiving discovery boost: {self.boosted_subject_ids}")
 
@@ -91,9 +90,9 @@ class PriorityEngine:
             self.reasoning_flags['discovery_boost_applied'] = True
 
         if diagnostics['strategic_mode'] == 'CONQUER' and \
-                subject.relevance_weight <= self.ROI_POINT_VALUE_THRESHOLD and \
-                diagnostics['total_time_invested_hr'] > self.ROI_TIME_THRESHOLD_HR and \
-                diagnostics['learning_velocity'] < self.ROI_VELOCITY_THRESHOLD:
+                subject.relevance_weight <= self.config.get("priority_engine.roi_point_value_threshold") and \
+                diagnostics['total_time_invested_hr'] > self.config.get("priority_engine.roi_time_threshold_hr") and \
+                diagnostics['learning_velocity'] < self.config.get("priority_engine.roi_velocity_threshold"):
             final_priority *= 0.25
             self.reasoning_flags['roi_warning'] = True
             log.warning(f"ROI Warning triggered for subject '{subject.name}'.")

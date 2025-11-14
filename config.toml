@@ -1,0 +1,20 @@
+# config.toml
+
+[diagnoser]
+decay_rate = 0.1
+target_questions_for_confidence = 200
+mastery_target = 0.90
+conquer_threshold = 0.80
+min_cycles_in_state_for_regression = 3
+mastery_drop_threshold_for_regression = 0.20
+
+[priority_engine]
+max_discovery_boosts_per_cycle = 2
+roi_time_threshold_hr = 20
+roi_velocity_threshold = 0.01
+roi_point_value_threshold = 3
+
+[business_logic]
+w_relevance = 0.5
+w_mastery = 0.3
+w_urgency = 0.2

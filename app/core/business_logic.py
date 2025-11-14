@@ -4,6 +4,7 @@ import logging
 import random
 from typing import List
 
+from app.core.config_service import ConfigService
 from app.core.tutor_engine.rebalance_strategies import IRebalanceStrategy, LowAccuracyStrategy, HighAccuracyStrategy
 from app.models.session import SubjectPerformance
 from app.models.subject import CycleSubject
@@ -11,13 +12,14 @@ from app.models.subject import CycleSubject
 log = logging.getLogger(__name__)
 
 
-def calculate_final_weight(relevance: int, volume: int, difficulty: int) -> float:
+def calculate_final_weight(relevance: int, volume: int, difficulty: int, config_service: ConfigService) -> float:
     """
     Calculates the weighted average for a subject's importance in a cycle.
     """
-    w_relevance = 0.5
-    w_volume = 0.2
-    w_difficulty = 0.3
+    # TODO: Update call sites to pass ConfigService
+    w_relevance = config_service.get("business_logic.w_relevance")
+    w_volume = config_service.get("business_logic.w_volume")
+    w_difficulty = config_service.get("business_logic.w_difficulty")
     final_weight = (relevance * w_relevance) + (volume * w_volume) + (difficulty * w_difficulty)
     log.info(f"final_weight:'{final_weight}'")
     return final_weight

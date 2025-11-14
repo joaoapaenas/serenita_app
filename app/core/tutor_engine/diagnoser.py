@@ -4,9 +4,9 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import List
 
+from app.core.config_service import ConfigService
 from app.models.session import StudySession
 from app.models.subject import CycleSubject
-from . import tutor_config as config
 
 log = logging.getLogger(__name__)
 
@@ -16,9 +16,11 @@ class Diagnoser:
     Analyzes a subject's history and state
     """
 
-    def __init__(self, subject: CycleSubject, study_history: List[StudySession]):
+    # TODO: Update call sites to pass ConfigService
+    def __init__(self, subject: CycleSubject, study_history: List[StudySession], config_service: ConfigService):
         self.subject = subject
         self.subject_history = self._filter_history(study_history)
+        self.config = config_service
 
     def _filter_history(self, full_history: List[StudySession]) -> List[StudySession]:
         """Isolates session records relevant to the current subject."""
@@ -71,7 +73,7 @@ class Diagnoser:
             try:
                 session_date = datetime.fromisoformat(session.start_time).date()
                 days_ago = (today_date - session_date).days
-                weight = math.exp(-config.DECAY_RATE * days_ago)
+                weight = math.exp(-self.config.get("diagnoser.decay_rate") * days_ago)
                 weights.append(weight)
                 for q in session.questions:
                     weighted_scores.append(q.is_correct * weight)
@@ -124,7 +126,7 @@ class Diagnoser:
         """Implements logic from v20.md section 3.3.3."""
         # 1. Confidence from Volume
         total_questions = perf_metrics['total_questions']
-        c_volume = math.log10(total_questions + 1) / math.log10(config.TARGET_QUESTIONS_FOR_CONFIDENCE + 1)
+        c_volume = math.log10(total_questions + 1) / math.log10(self.config.get("diagnoser.target_questions_for_confidence") + 1)
         c_volume = min(c_volume, 1.0)  # Cap at 1.0
 
         # 2. Confidence from Recency (is the durability_factor)
@@ -156,11 +158,11 @@ class Diagnoser:
         """v20.md section 3.3.4 Step A"""
         if time_hr < 1.0 and durable_mastery < 0.1:
             return 'DISCOVERY'
-        elif durable_mastery >= config.MASTERY_TARGET and durability_factor > 0.7:
+        elif durable_mastery >= self.config.get("diagnoser.mastery_target") and durability_factor > 0.7:
             return 'MAINTAIN'
-        elif durable_mastery >= config.MASTERY_TARGET:
+        elif durable_mastery >= self.config.get("diagnoser.mastery_target"):
             return 'CEMENT'
-        elif durable_mastery >= config.CONQUER_THRESHOLD:
+        elif durable_mastery >= self.config.get("diagnoser.conquer_threshold"):
             return 'CONQUER'
         else:
             return 'DEEP_WORK'
@@ -168,11 +170,12 @@ class Diagnoser:
     def _apply_hysteresis_gate(self, proposed_mode: str, current_mastery: float) -> str:
         """v20.md section 3.3.4 Step B - Veto logic"""
         previous_mode = self.subject.current_strategic_state
-        if previous_mode not in config.STATE_PROGRESSION:
+        state_progression = self.config.get("diagnoser.state_progression")
+        if previous_mode not in state_progression:
             return proposed_mode  # No valid previous state to compare against
 
-        previous_idx = config.STATE_PROGRESSION.index(previous_mode)
-        proposed_idx = config.STATE_PROGRESSION.index(proposed_mode)
+        previous_idx = state_progression.index(previous_mode)
+        proposed_idx = state_progression.index(proposed_mode)
 
         # A "regression" is moving to a state earlier in the list
         is_regression = proposed_idx < previous_idx
@@ -192,14 +195,14 @@ class Diagnoser:
         hysteresis = self.subject.state_hysteresis_data
 
         # 1. Has been in the current state for enough cycles
-        if hysteresis.get('consecutive_cycles_in_state', 0) >= config.MIN_CYCLES_IN_STATE_FOR_REGRESSION:
+        if hysteresis.get('consecutive_cycles_in_state', 0) >= self.config.get("diagnoser.min_cycles_in_state_for_regression"):
             log.debug(f"Allowing regression to '{proposed_mode}' for '{self.subject.name}' (reason: tenure in state).")
             return proposed_mode
 
         # 2. Has there been a significant drop in mastery?
         last_mastery = hysteresis.get('last_mastery_score', 0.0)
         mastery_drop = last_mastery - current_mastery
-        if last_mastery > 0 and (mastery_drop / last_mastery) > config.MASTERY_DROP_THRESHOLD_FOR_REGRESSION:
+        if last_mastery > 0 and (mastery_drop / last_mastery) > self.config.get("diagnoser.mastery_drop_threshold_for_regression"):
             log.debug(
                 f"Allowing regression to '{proposed_mode}' for '{self.subject.name}' (reason: significant mastery drop).")
             return proposed_mode

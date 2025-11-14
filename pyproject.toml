@@ -9,6 +9,7 @@ dependencies = [
     "pyside6",
     "qtawesome>=1.4.0",
     "sqlalchemy",
+    "toml",
 ]
 
 [tool.setuptools.packages.find]

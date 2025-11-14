@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 
 from app.core.database import IDatabaseConnectionFactory
+from app.core.config_service import ConfigService
 from app.services.interfaces import (
     ICycleService, ISessionService, IExamService, IUserService, IPerformanceService,
     IAnalyticsService, IMasterSubjectService, ICycleSubjectService, IStudyQueueService,
@@ -12,6 +13,7 @@ from app.services.interfaces import (
 @dataclass
 class AppContext:
     """A dataclass to hold all application services for easy dependency injection."""
+    config_service: ConfigService
     cycle_service: ICycleService
     session_service: ISessionService
     exam_service: IExamService

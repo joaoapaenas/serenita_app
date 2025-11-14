@@ -6,6 +6,7 @@ import sys
 from PySide6.QtGui import QFontDatabase, QFont
 from PySide6.QtWidgets import QApplication
 
+from app.core.config_service import ConfigService
 from app.core.context import AppContext
 from app.core.database import SqliteConnectionFactory, get_db_file_path
 from app.core.logger import setup_logging
@@ -102,6 +103,7 @@ def main():
 
     log.debug("Composing application services into AppContext...")
     app_context = AppContext(
+        config_service=ConfigService(),
         cycle_service=SqliteCycleService(conn_factory),
         session_service=SqliteSessionService(conn_factory),
         exam_service=SqliteExamService(conn_factory),
