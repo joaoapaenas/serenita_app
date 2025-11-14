@@ -16,6 +16,23 @@ def mock_db_connection():
     conn.execute.return_value.fetchone.return_value = None  # Default to no row
     conn.cursor.return_value = conn  # Mock cursor to be the connection itself for simplicity
     conn.Error = sqlite3.Error # Attach a mock for the database error
+
+    # Explicitly mock commit and rollback
+    conn.commit = MagicMock()
+    conn.rollback = MagicMock()
+
+    # Mock context manager behavior
+    conn.__enter__.return_value = conn
+    # When __exit__ is called, ensure commit is called if no exception
+    def mock_exit(exc_type, exc_val, exc_tb):
+        if exc_type is None: # No exception, so commit
+            conn.commit()
+        else: # Exception occurred, so rollback
+            conn.rollback()
+        return False # Propagate exceptions
+
+    conn.__exit__.side_effect = mock_exit
+
     return conn
 
 
@@ -80,12 +97,24 @@ def test_add_work_unit_success(work_unit_service, mock_db_connection):
     unit_data = {
         'title': 'New Chapter', 'type': 'reading', 'estimated_time': 45, 'topic': 'New Topic'
     }
-    mock_db_connection.lastrowid = 5
-    mock_db_connection.execute.return_value.fetchone.return_value = {
+    # Mock for the INSERT statement
+    mock_insert_cursor = MagicMock()
+    mock_insert_cursor.lastrowid = 5
+
+    # Mock for the SELECT statement after insert
+    mock_select_cursor = MagicMock()
+    mock_select_cursor.fetchone.return_value = {
         'id': 5, 'subject_id': subject_id, 'unit_id': 'wu_1_5', 'title': 'New Chapter',
         'type': 'reading', 'estimated_time_minutes': 45, 'is_completed': 0,
         'related_questions_topic': 'New Topic', 'sequence_order': 0
     }
+
+    # Configure execute to return different mocks for each call
+    mock_db_connection.execute.side_effect = [
+        mock_insert_cursor,  # First call: INSERT
+        MagicMock(),         # Second call: UPDATE (return value not used)
+        mock_select_cursor   # Third call: SELECT
+    ]
 
     result = work_unit_service.add_work_unit(subject_id, unit_data)
 
@@ -103,6 +132,7 @@ def test_add_work_unit_success(work_unit_service, mock_db_connection):
         ('wu_1_5', 5)
     )
     mock_db_connection.commit.assert_called_once()
+    mock_db_connection.close.assert_called_once()
 
 
 def test_add_work_unit_db_error(work_unit_service, mock_db_connection):

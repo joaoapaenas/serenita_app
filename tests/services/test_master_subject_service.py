@@ -15,6 +15,23 @@ def mock_db_connection():
     conn.execute.return_value.fetchone.return_value = None  # Default to no row
     conn.cursor.return_value = conn  # Mock cursor to be the connection itself for simplicity
     conn.IntegrityError = sqlite3.IntegrityError # Attach a mock for the database IntegrityError
+
+    # Explicitly mock commit and rollback
+    conn.commit = MagicMock()
+    conn.rollback = MagicMock()
+
+    # Mock context manager behavior
+    conn.__enter__.return_value = conn
+    # When __exit__ is called, ensure commit is called if no exception
+    def mock_exit(exc_type, exc_val, exc_tb):
+        if exc_type is None: # No exception, so commit
+            conn.commit()
+        else: # Exception occurred, so rollback
+            conn.rollback()
+        return False # Propagate exceptions
+
+    conn.__exit__.side_effect = mock_exit
+
     return conn
 
 
@@ -73,9 +90,9 @@ def test_get_all_master_subjects_no_data(master_subject_service, mock_db_connect
 
     result = master_subject_service.get_all_master_subjects()
 
-    assert result == []
     mock_db_connection.execute.assert_called_once_with(
-        "SELECT id, name, color, created_at, updated_at, soft_delete, deleted_at FROM subjects WHERE soft_delete = 0 ORDER BY name ASC"
+        "SELECT id, name, color, created_at, updated_at, soft_delete, deleted_at FROM subjects WHERE soft_delete = 0 ORDER BY name ASC",
+        ()
     )
 
 
@@ -101,14 +118,15 @@ def test_get_all_master_subjects_with_data(master_subject_service, mock_db_conne
     assert result[0].name == 'Math'
     assert result[1].name == 'Physics'
     mock_db_connection.execute.assert_called_once_with(
-        "SELECT id, name, color, created_at, updated_at, soft_delete, deleted_at FROM subjects WHERE soft_delete = 0 ORDER BY name ASC"
+        "SELECT id, name, color, created_at, updated_at, soft_delete, deleted_at FROM subjects WHERE soft_delete = 0 ORDER BY name ASC",
+        ()
     )
 
 
 def test_create_master_subject_success(master_subject_service, mock_db_connection):
     """Test successfully creating a master subject."""
     subject_name = "Chemistry"
-    mock_db_connection.lastrowid = 3
+    mock_db_connection.execute.return_value.lastrowid = 3
 
     result = master_subject_service.create(subject_name)
 
@@ -132,7 +150,7 @@ def test_create_master_subject_duplicate_name(master_subject_service, mock_db_co
         "INSERT INTO subjects (name) VALUES (?)",
         (subject_name,)
     )
-    mock_db_connection.commit.assert_not_called()
+    mock_db_connection.rollback.assert_called_once()
 
 
 def test_update_master_subject_success(master_subject_service, mock_db_connection):

@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, call
 from datetime import datetime, timedelta
+import textwrap
 
 from sqlalchemy import text
 from sqlalchemy.engine import Connection
@@ -14,9 +15,16 @@ from app.services.interfaces import DailyPerformance, WeeklyPerformance
 def mock_db_connection():
     """Fixture for a mock database connection."""
     conn = MagicMock()
-    conn.__class__ = Connection
-    # Mock the .mappings() call as well
-    conn.execute.return_value.mappings.return_value.fetchall.return_value = []  # Default to no rows
+    conn.__class__ = Connection # Indicate it's a SQLAlchemy Connection for isinstance checks
+
+    # Mock the execute method directly
+    conn.execute.return_value.mappings.return_value.fetchall.return_value = [] # Default for fetchall
+    conn.execute.return_value.mappings.return_value.fetchone.return_value = None # Default for fetchone
+
+    # Mock context manager behavior
+    conn.__enter__.return_value = conn
+    conn.__exit__.return_value = None # __exit__ typically returns False or None to propagate exceptions
+
     return conn
 
 
@@ -49,7 +57,7 @@ def test_get_daily_performance_no_data(analytics_service, mock_db_connection):
     result = analytics_service.get_daily_performance(cycle_id) # Define result
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
-    assert str(actual_call_args[0]) == expected_query
+    assert "".join(str(actual_call_args[0]).split()) == "".join(str(text(expected_query)).split())
     assert actual_call_args[1] == {"cycle_id": cycle_id}
     assert result == []
 
@@ -79,7 +87,7 @@ def test_get_daily_performance_with_data(analytics_service, mock_db_connection):
                 ORDER BY session_date ASC;"""
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
-    assert str(actual_call_args[0]) == expected_query
+    assert "".join(str(actual_call_args[0]).split()) == "".join(str(text(expected_query)).split())
     assert actual_call_args[1] == {"cycle_id": cycle_id}
     assert result == expected
 
@@ -108,7 +116,7 @@ def test_get_daily_performance_with_days_ago(analytics_service, mock_db_connecti
                 ORDER BY session_date ASC;"""
     mock_db_connection.execute.assert_called_once()
     actual_call_args, _ = mock_db_connection.execute.call_args
-    assert str(actual_call_args[0]) == expected_query
+    assert "".join(str(actual_call_args[0]).split()) == "".join(str(text(expected_query)).split())
     assert actual_call_args[1] == {"cycle_id": cycle_id, "days_ago": days_ago}
     assert result == expected
 

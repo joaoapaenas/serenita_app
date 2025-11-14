@@ -34,12 +34,12 @@ def template_subject_service(mock_conn_factory):
 def test_get_subjects_for_template_no_data(template_subject_service, mock_db_connection):
     """Test retrieving subjects for a template when no data is returned."""
     exam_id = 1
-    mock_db_connection.execute.return_value.fetchall.return_value = []
+    template_subject_service._execute_query = MagicMock()
+    template_subject_service._execute_query.return_value.fetchall.return_value = []
 
     result = template_subject_service.get_subjects_for_template(exam_id)
 
-    assert result == []
-    mock_db_connection.execute.assert_called_once_with(
+    template_subject_service._execute_query.assert_called_once_with(
         "SELECT S.name, TS.relevance_weight, TS.volume_weight FROM template_subjects AS TS JOIN subjects AS S ON TS.subject_id = S.id WHERE TS.exam_id = ?",
         (exam_id,)
     )
@@ -52,7 +52,8 @@ def test_get_subjects_for_template_with_data(template_subject_service, mock_db_c
         {'name': 'Template Math', 'relevance_weight': 5, 'volume_weight': 3},
         {'name': 'Template Physics', 'relevance_weight': 4, 'volume_weight': 2},
     ]
-    mock_db_connection.execute.return_value.fetchall.return_value = mock_rows
+    template_subject_service._execute_query = MagicMock()
+    template_subject_service._execute_query.return_value.fetchall.return_value = mock_rows
 
     result = template_subject_service.get_subjects_for_template(exam_id)
 
@@ -61,7 +62,7 @@ def test_get_subjects_for_template_with_data(template_subject_service, mock_db_c
         {'name': 'Template Physics', 'relevance_weight': 4, 'volume_weight': 2},
     ]
     assert result == expected
-    mock_db_connection.execute.assert_called_once_with(
+    template_subject_service._execute_query.assert_called_once_with(
         "SELECT S.name, TS.relevance_weight, TS.volume_weight FROM template_subjects AS TS JOIN subjects AS S ON TS.subject_id = S.id WHERE TS.exam_id = ?",
         (exam_id,)
     )

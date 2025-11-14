@@ -14,6 +14,23 @@ def mock_db_connection():
     conn = MagicMock()
     conn.execute.return_value.fetchall.return_value = []  # Default to no rows
     conn.execute.return_value.fetchone.return_value = None  # Default to no row
+
+    # Explicitly mock commit and rollback
+    conn.commit = MagicMock()
+    conn.rollback = MagicMock()
+
+    # Mock context manager behavior
+    conn.__enter__.return_value = conn
+    # When __exit__ is called, ensure commit is called if no exception
+    def mock_exit(exc_type, exc_val, exc_tb):
+        if exc_type is None: # No exception, so commit
+            conn.commit()
+        else: # Exception occurred, so rollback
+            conn.rollback()
+        return False # Propagate exceptions
+
+    conn.__exit__.side_effect = mock_exit
+
     return conn
 
 
