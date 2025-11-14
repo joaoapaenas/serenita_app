@@ -5,6 +5,13 @@ from datetime import datetime, timezone
 from typing import Tuple, Dict, Any, Optional
 
 from app.models.subject import CycleSubject
+from .priority_strategies import (
+    DiscoveryPriorityStrategy,
+    DeepWorkPriorityStrategy,
+    ConquerPriorityStrategy,
+    CementPriorityStrategy,
+    MaintainPriorityStrategy,
+)
 
 log = logging.getLogger(__name__)
 
@@ -23,6 +30,13 @@ class PriorityEngine:
         self.cognitive_multiplier = cognitive_capacity_multiplier
         self.reasoning_flags = {}
         self._setup_discovery_boost(all_discovery_subjects)
+        self._priority_strategies = {
+            'DISCOVERY': DiscoveryPriorityStrategy(),
+            'DEEP_WORK': DeepWorkPriorityStrategy(),
+            'CONQUER': ConquerPriorityStrategy(),
+            'CEMENT': CementPriorityStrategy(),
+            'MAINTAIN': MaintainPriorityStrategy(),
+        }
 
     def _setup_discovery_boost(self, all_discovery_subjects: list):
         """Identifies subjects that will get the discovery boost, per spec 4.2.1."""
@@ -45,31 +59,25 @@ class PriorityEngine:
     def _calculate_base_priority(self, subject: CycleSubject, diagnostics: dict) -> Tuple[float, dict]:
         """Selects a strategy based on strategic_mode and executes its formula. (Spec 4.1.2)"""
         mode = diagnostics['strategic_mode']
-        confidence = diagnostics['mastery_confidence_score']
-        mastery = diagnostics['durable_mastery_score']
-        durability = diagnostics['durability_factor']
-        points = subject.relevance_weight
+        strategy = self._priority_strategies.get(mode)
 
-        confidence_modulator = 0.4 + (0.6 * confidence)
-        priority = 0.0
+        if not strategy:
+            log.warning(f"No priority strategy found for mode '{mode}'. Defaulting to 0.")
+            return 0.0, {}
 
-        if mode == 'DISCOVERY':
-            priority = 50 + (points * 10)
-        elif mode == 'DEEP_WORK':
-            priority = (50 + (points * 5) + (1.0 - mastery) * 50) * confidence_modulator
-        elif mode == 'CONQUER':
-            priority = (90 + mastery * 20 + points * 2) * confidence_modulator
-        elif mode == 'CEMENT':
-            priority = (40 + (1.0 - durability) * 40 + points * 3) * confidence_modulator
-        elif mode == 'MAINTAIN':
-            priority = (10 + points * 2) * confidence_modulator
-
+        priority = strategy.calculate(
+            points=subject.relevance_weight,
+            mastery=diagnostics['durable_mastery_score'],
+            confidence=diagnostics['mastery_confidence_score'],
+            durability=diagnostics['durability_factor']
+        )
+        
         base_priority = priority * self.cognitive_multiplier
 
         priority_breakdown = {
             'base_score': priority,
             'cognitive_multiplier': self.cognitive_multiplier,
-            'confidence_modulator': confidence_modulator
+            'confidence_modulator': 0.4 + (0.6 * diagnostics['mastery_confidence_score'])
         }
         return base_priority, priority_breakdown
 
